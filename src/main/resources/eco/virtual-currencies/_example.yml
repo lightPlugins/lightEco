@@ -1,0 +1,54 @@
+#
+#  $$\ $$\           $$\        $$\     $$$$$$$$\
+#  $$ |\__|          $$ |       $$ |    $$  _____|
+#  $$ |$$\  $$$$$$\  $$$$$$$\ $$$$$$\   $$ |      $$$$$$$\  $$$$$$\  $$$$$$$\   $$$$$$\  $$$$$$\$$$$\  $$\   $$\
+#  $$ |$$ |$$  __$$\ $$  __$$\\_$$  _|  $$$$$\   $$  _____|$$  __$$\ $$  __$$\ $$  __$$\ $$  _$$  _$$\ $$ |  $$ |
+#  $$ |$$ |$$ /  $$ |$$ |  $$ | $$ |    $$  __|  $$ /      $$ /  $$ |$$ |  $$ |$$ /  $$ |$$ / $$ / $$ |$$ |  $$ |
+#  $$ |$$ |$$ |  $$ |$$ |  $$ | $$ |$$\ $$ |     $$ |      $$ |  $$ |$$ |  $$ |$$ |  $$ |$$ | $$ | $$ |$$ |  $$ |
+#  $$ |$$ |\$$$$$$$ |$$ |  $$ | \$$$$  |$$$$$$$$\\$$$$$$$\ \$$$$$$  |$$ |  $$ |\$$$$$$  |$$ | $$ | $$ |\$$$$$$$ |
+#  \__|\__| \____$$ |\__|  \__|  \____/ \________|\_______| \______/ \__|  \__| \______/ \__| \__| \__| \____$$ |
+#          $$\   $$ |                                                                                  $$\   $$ |
+#          \$$$$$$  |                                                                                  \$$$$$$  |
+#           \______/                                                                                    \______/
+#
+#
+#               Plugin version 6.0
+#               Developer: lightPlugins
+#
+#
+#   ########################################################################################  #
+#
+#   This is the example virtual currency config. You can use this file as a template for your own currency.
+#   This currency will NOT load and is only here for example purposes.
+#   The file name is the ID of the currency.
+#   You can also create multiple folders within 'virtual-currencies' to group your currencies.
+#
+#   IMPORTANT: If you DELETE one file, the target currencies will
+#              be deleted including all stored Data after server restart.
+#
+#   You can use legacy or hex colors in every line for visual text.
+#   If you have any problems, join my discord server (https://discord.gg/t9vS3hgWf8)
+#
+#   ########################################################################################  #
+#
+#
+# Should this currency be the standard currency for 'Vault'?
+# This is used for other plugins like shops/jobs or similar.
+#
+# IMPORTANT: You can only use this feature in ONE virtual currency!
+default: false
+# The visual name in messages and GUIs
+display-name: '<#ffdc73>Example Currency'
+# This is the starting balance for this
+# currency when a new player joins the server.
+start-balance: 0.00
+# If this is true, numbers from all output messages,
+# lore’s and placeholder shows now without decimal places.
+currency-without-decimal-places: false
+# visual currency name in messages and GUIs in plural
+currency-name-plural: 'Token'
+# visual currency name in messages and GUIs in singular
+currency-name-singular: 'Tokens'
+# The max possible money amount.
+# If a player reaches this value, he can't get any more money.
+max-balance: 999,999,999,999,999,999,999,999.99

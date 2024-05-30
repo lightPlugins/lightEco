@@ -1,0 +1,6 @@
+# Here you can change the language of this module.
+# Currently, the following languages are available:
+#
+#  'en' -> English translations.
+#  'de' -> German translations.
+module-language: en

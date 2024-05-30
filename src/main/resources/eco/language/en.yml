@@ -1,0 +1,46 @@
+#
+#  $$\ $$\           $$\        $$\     $$$$$$$$\
+#  $$ |\__|          $$ |       $$ |    $$  _____|
+#  $$ |$$\  $$$$$$\  $$$$$$$\ $$$$$$\   $$ |      $$$$$$$\  $$$$$$\  $$$$$$$\   $$$$$$\  $$$$$$\$$$$\  $$\   $$\
+#  $$ |$$ |$$  __$$\ $$  __$$\\_$$  _|  $$$$$\   $$  _____|$$  __$$\ $$  __$$\ $$  __$$\ $$  _$$  _$$\ $$ |  $$ |
+#  $$ |$$ |$$ /  $$ |$$ |  $$ | $$ |    $$  __|  $$ /      $$ /  $$ |$$ |  $$ |$$ /  $$ |$$ / $$ / $$ |$$ |  $$ |
+#  $$ |$$ |$$ |  $$ |$$ |  $$ | $$ |$$\ $$ |     $$ |      $$ |  $$ |$$ |  $$ |$$ |  $$ |$$ | $$ | $$ |$$ |  $$ |
+#  $$ |$$ |\$$$$$$$ |$$ |  $$ | \$$$$  |$$$$$$$$\\$$$$$$$\ \$$$$$$  |$$ |  $$ |\$$$$$$  |$$ | $$ | $$ |\$$$$$$$ |
+#  \__|\__| \____$$ |\__|  \__|  \____/ \________|\_______| \______/ \__|  \__| \______/ \__| \__| \__| \____$$ |
+#          $$\   $$ |                                                                                  $$\   $$ |
+#          \$$$$$$  |                                                                                  \$$$$$$  |
+#           \______/                                                                                    \______/
+#
+# Do not change this value !
+version: 6
+# Here you can translate ALL the plugin messages. Possible formats:
+#   - '<red>' -> red color
+#   - '<bold> [<b>]' -> bold
+#   - '<italic> [<i>, <em>]' -> italic
+#   - '<reset>' -> reset all open colors/decorations
+#   - '<click> -> please read: https://docs.advntr.dev/minimessage/format.html#click
+#   - '<hover> -> please read: https://docs.advntr.dev/minimessage/format.html#hover
+#   - '<gradient>' -> please read: https://docs.advntr.dev/minimessage/format.html#gradient
+#
+#   You can also use the old format like '&7 for gray, &c for red, etc.'
+#   Legacy hex color also supported -> '&#ffdc73 or #ffdc73'
+#
+#   Example, booth has exactly the same results:
+#   - prefix: '<#ffdc73><bold><italic>light<reset><gray>Economy<reset> <dark_gray>●⏺<reset> <gray>'
+#   - prefix: '&#ffdc73&l&olight&7Economy &8●⏺ &7'
+#
+prefix: '<#ffdc73><b><i>light<reset><gray>Economy<reset> <dark_gray>●⏺<reset> <gray>'
+noPermission: '<red>You do not have permission to use this command! You need <dark_red>#permission#'
+moduleReload: '<gray>Module <#ffdc73>#module#<gray> successfully reloaded!'
+reloadAll: '<gray>All modules <#ffdc73>successfully<gray> reloaded!'
+wrongSyntax: '<red>Wrong command syntax. <gray>Please use <red>#syntax#'
+noNumber: '<red>This is not a number! Please use valid numbers.'
+onlyPositive: '<red>This is not a positive number! Please use only positive numbers.'
+playerNotFound: '<red>The player <dark_red>#player#<red> could not be found!'
+moneyShow: '<gray>You have currently <#ffdc73>#amount# <gray>#currency# on your balance.'
+depositSuccess: '<gray>Successfully deposited <#ffdc73>#amount# <gray>#currency# to <#ffdc73>#player#<gray>.'
+depositFailed: '<red>Failed to deposit <dark_red>#amount# <red>#currency# to <dark_red>#player#<red>. <gray>Reason: <red>#reason#'
+withdrawSuccess: '<gray>Successfully withdrawn <#ffdc73>#amount# <gray>#currency# from <#ffdc73>#player#<gray>.'
+withdrawFailed: '<red>Failed to withdraw <dark_red>#amount# <red>#currency# from <dark_red>#player#<red>. <gray>Reason: <red>#reason#'
+setSuccess: '<gray>Successfully set <#ffdc73>#amount# <gray>#currency# for <#ffdc73>#player#<gray>.'
+setFailed: '<red>Failed to set <dark_red>#amount# <red>#currency# for <dark_red>#player#<red>. <gray>Reason: <red>#reason#'

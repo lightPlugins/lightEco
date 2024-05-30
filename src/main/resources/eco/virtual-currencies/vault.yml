@@ -1,0 +1,20 @@
+# Should this currency be the standard currency for 'Vault'?
+# This is used for other plugins like shops/jobs or similar.
+#
+# IMPORTANT: You can only use this feature in ONE virtual currency!
+default: true
+# The visual name in messages and GUIs
+display-name: '<#ffdc73>Vault'
+# This is the starting balance for this
+# currency when a new player joins the server.
+start-balance: 200.00
+# If this is true, numbers from all output messages,
+# lore’s and placeholder shows now without decimal places.
+currency-without-decimal-places: false
+# visual currency name in messages and GUIs in plural
+currency-name-plural: 'EURs'
+# visual currency name in messages and GUIs in singular
+currency-name-singular: 'EUR'
+# The max possible money amount.
+# If a player reaches this value, he can't get any more money.
+max-balance: 999,999,999,999,999,999,999,999.99

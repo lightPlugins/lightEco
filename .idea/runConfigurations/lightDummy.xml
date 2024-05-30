@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="lightDummy" type="JarApplication">
+    <option name="JAR_PATH" value="$PROJECT_DIR$/lightdummy-dev-server/paper-1.20.4-464.jar" />
+    <option name="PROGRAM_PARAMETERS" value="-nogui" />
+    <option name="WORKING_DIRECTORY" value="C:\Users\phili\Documents\lightModule\lightdummy-dev-server" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <option name="ALTERNATIVE_JRE_PATH" value="17" />
+    <method v="2">
+      <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/pom.xml" goal="clean install" />
+    </method>
+  </configuration>
+</component>

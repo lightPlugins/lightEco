@@ -20,7 +20,7 @@
               <relocations>
                 <relocation>
                   <pattern>com.zaxxer.hikari</pattern>
-                  <shadedPattern>io.lightplugins.dummy.util.database.hikari</shadedPattern>
+                  <shadedPattern>io.lightplugins.economy.util.database.hikari</shadedPattern>
                 </relocation>
               </relocations>
               <outputFile>./lightdummy-dev-server/plugins/${project.artifactId}-${project.version}-SNAPSHOT.jar</outputFile>

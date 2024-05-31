@@ -4,6 +4,11 @@
 #  'en' -> English translations.
 #  'de' -> German translations.
 module-language: en
+# Here you can change the database sync time in seconds.
+# This is the time in seconds when the plugin will synchronize the database with the server.
+# Do not set this value too low, as it can cause performance issues on large server.
+# The default value is 120 seconds.
+database-sync-time: 120
 # Here you can enable and disable individual modules. Please note that any changes will require a server restart.
 default-currency:
   # Start Balance if the player comes new to the server.

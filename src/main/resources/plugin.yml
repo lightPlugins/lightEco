@@ -1,15 +1,21 @@
-name: lightDummy
-author: lightPlugins
+name: lightEco
+author: lightStudio
 version: 0.1.0
-main: io.lightplugins.dummy.Light
+main: io.lightplugins.economy.Light
 api-version: 1.13
-depend: []
-softdepend: []
+depend: ["PlaceholderAPI", "Vault"]
+softdepend: ["Towny"]
 loadbefore: []
 libraries: []
 #  - org.mariadb.jdbc:mariadb-java-client:2.7.4
 #  - com.zaxxer:HikariCP:5.1.0
 commands:
-  lightdummy:
-    description: The root command for lightEconomy overall
-    aliases: [dummy]
+  lighteco:
+    description: The root command for LightEco overall
+    aliases: [le, leco, lighteconomy]
+  bal:
+    description: The root command for LightEco overall
+    aliases: [money, eco, economy, balance]
+  baltop:
+    description: The root command for LightEco overall
+    aliases: [moneytop, ecotop, economytop, balancetop]

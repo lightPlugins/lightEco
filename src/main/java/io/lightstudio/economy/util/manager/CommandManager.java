@@ -101,17 +101,7 @@ public class CommandManager implements CommandExecutor {
 
             if(command.getName().equals("eco")) {
 
-                if(sender instanceof Player player) {
-                    LightEco.economyVaultyService.getBalanceAsync(player.getUniqueId())
-                            .thenAccept(balance -> {
-                                Light.getMessageSender().sendPlayerMessage(LightEco.getMessageParams().moneyShow()
-                                        .replace("#amount#", NumberFormatter.formatForMessages(balance))
-                                        .replace("#currency#", "$"), player);
 
-                    });
-
-                    return false;
-                }
             }
 
         return false;

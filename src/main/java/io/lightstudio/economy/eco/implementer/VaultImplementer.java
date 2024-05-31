@@ -4,7 +4,7 @@ import io.lightstudio.economy.Light;
 import io.lightstudio.economy.eco.LightEco;
 import io.lightstudio.economy.eco.api.event.VaultDepositEvent;
 import io.lightstudio.economy.eco.api.event.VaultWithdrawEvent;
-import io.lightstudio.economy.eco.models.TransactionStatus;
+import io.lightstudio.economy.eco.api.TransactionStatus;
 import io.lightstudio.economy.util.NumberFormatter;
 import io.lightstudio.economy.util.hooks.Towny;
 import net.milkbowl.vault.economy.Economy;

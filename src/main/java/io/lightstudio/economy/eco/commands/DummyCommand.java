@@ -99,20 +99,6 @@ public class DummyCommand extends SubCommand {
             return false;
         }
 
-        LightEco.economyVaultyService.depositPlayerAsync(target.getUniqueId(), bg)
-                .thenAcceptAsync(depositResult -> {
-                    if(depositResult.transactionSuccess()) {
-                        Light.getMessageSender().sendPlayerMessage(LightEco.getMessageParams().depositSuccess()
-                                .replace("#player#", target.getName())
-                                .replace("#amount#", NumberFormatter.formatForMessages(bg)), player);
-                        return;
-                    }
-                    Light.getMessageSender().sendPlayerMessage(LightEco.getMessageParams().depositFailed()
-                            .replace("#player#", target.getName())
-                            .replace("#reason#", depositResult.errorMessage())
-                            .replace("#amount#", NumberFormatter.formatForMessages(bg)), player);
-                });
-
         return false;
     }
 

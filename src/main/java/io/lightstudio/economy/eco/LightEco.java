@@ -6,7 +6,9 @@ import io.lightstudio.economy.eco.api.LightEcoAPI;
 import io.lightstudio.economy.eco.commands.DummyCommand;
 import io.lightstudio.economy.eco.config.MessageParams;
 import io.lightstudio.economy.eco.config.SettingParams;
+import io.lightstudio.economy.eco.events.OnPlayerJoinServer;
 import io.lightstudio.economy.eco.implementer.VaultImplementer;
+import io.lightstudio.economy.eco.manager.PrepareProfileLoading;
 import io.lightstudio.economy.eco.manager.QueryManager;
 import io.lightstudio.economy.util.SubCommand;
 import io.lightstudio.economy.util.interfaces.LightModule;
@@ -70,6 +72,8 @@ public class LightEco implements LightModule {
         registerVaultProvider();
         api = new LightEcoAPI();
 
+        new PrepareProfileLoading(getQueryManager());
+
         registerEvents();
 
     }
@@ -123,7 +127,7 @@ public class LightEco implements LightModule {
     public QueryManager getQueryManager() { return this.queryManager; }
 
     public void registerEvents() {
-        //Bukkit.getPluginManager().registerEvents(new CreatePlayerOnJoin(), Light.instance);
+        Bukkit.getPluginManager().registerEvents(new OnPlayerJoinServer(), Light.instance);
     }
 
     public void registerVaultProvider() {

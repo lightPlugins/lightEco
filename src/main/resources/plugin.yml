@@ -1,7 +1,7 @@
 name: lightEco
 author: lightStudio
 version: 0.1.0
-main: io.lightplugins.economy.Light
+main: io.lightstudio.economy.Light
 api-version: 1.13
 depend: ["PlaceholderAPI", "Vault"]
 softdepend: ["Towny"]

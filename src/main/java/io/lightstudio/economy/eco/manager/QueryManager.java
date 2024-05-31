@@ -2,11 +2,17 @@ package io.lightstudio.economy.eco.manager;
 
 //  999.999.999.999.999.999.999.999.999.999.999.999.999.999.999.999.999,99 -> max value for the database for NUMERIC(32, 2)
 
+import io.lightstudio.economy.Light;
 import io.lightstudio.economy.eco.LightEco;
+import io.lightstudio.economy.eco.api.EcoProfile;
+import io.lightstudio.economy.util.NumberFormatter;
 import io.lightstudio.economy.util.database.SQLDatabase;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -58,5 +64,28 @@ public class QueryManager {
                 .thenApplyAsync(rowsUpdated -> rowsUpdated > 0);
     }
 
-
+    public List<EcoProfile> getAllEcoProfiles() {
+        String sql = "SELECT * FROM " + tableName;
+        List<EcoProfile> ecoProfiles = new ArrayList<>();
+        try (ResultSet resultSet = database.executeQuery(sql)) {
+            Light.getConsolePrinting().debug("start loading profiles " + sql);
+            if (!resultSet.next()) {
+                Light.getConsolePrinting().debug("ResultSet is empty");
+                return ecoProfiles;
+            }
+            do {
+                Light.getConsolePrinting().debug("TEST");
+                UUID uuid = UUID.fromString(resultSet.getString("uuid"));
+                BigDecimal balance = resultSet.getBigDecimal("balance");
+                EcoProfile ecoProfile = new EcoProfile(uuid);
+                ecoProfile.setBalance(NumberFormatter.formatBigDecimal(balance));
+                ecoProfiles.add(ecoProfile);
+                Light.getConsolePrinting().debug("Loaded eco profile for UUID: " + uuid + " + balance: " + balance);
+            } while (resultSet.next());
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to fetch all eco profiles", e);
+        }
+        Light.getConsolePrinting().debug("TEST2");
+        return ecoProfiles;
+    }
 }

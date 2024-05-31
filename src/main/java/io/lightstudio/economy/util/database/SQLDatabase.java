@@ -96,14 +96,25 @@ public abstract class SQLDatabase {
     }
 
     public ResultSet executeQuery(String sql, Object... replacements) {
-
-        try (Connection c = getConnection();
-             PreparedStatement statement = prepareStatement(c, sql, replacements);
-             ResultSet set = statement.executeQuery()) {
-
-            return set;
+        Connection c = null;
+        PreparedStatement statement = null;
+        try {
+            c = getConnection();
+            statement = prepareStatement(c, sql, replacements);
+            return statement.executeQuery();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (c != null) {
+                    c.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return null;
     }

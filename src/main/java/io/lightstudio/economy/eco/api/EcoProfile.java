@@ -1,7 +1,5 @@
 package io.lightstudio.economy.eco.api;
 
-import io.lightstudio.economy.eco.models.TransactionStatus;
-
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -13,6 +11,7 @@ public class EcoProfile {
 
     public EcoProfile(UUID uuid) {
         this.uuid = uuid;
+        this.currentBalance = BigDecimal.ZERO;
         this.maxBalance = BigDecimal.valueOf(1000000);
     }
 

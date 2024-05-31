@@ -1,6 +1,6 @@
 package io.lightstudio.economy.eco.api.event;
 
-import io.lightstudio.economy.eco.models.TransactionStatus;
+import io.lightstudio.economy.eco.api.TransactionStatus;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;

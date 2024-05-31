@@ -1,4 +1,4 @@
-package io.lightstudio.economy.eco.models;
+package io.lightstudio.economy.eco.api;
 
 public enum TransactionStatus {
     SUCCESS,

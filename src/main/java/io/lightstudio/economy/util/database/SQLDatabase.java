@@ -1,16 +1,22 @@
 package io.lightstudio.economy.util.database;
 
 import io.lightstudio.economy.Light;
+import io.lightstudio.economy.eco.api.EcoProfile;
+import io.lightstudio.economy.util.NumberFormatter;
 import io.lightstudio.economy.util.database.model.DatabaseTypes;
 import me.lucko.helper.Schedulers;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
@@ -95,28 +101,22 @@ public abstract class SQLDatabase {
         return future;
     }
 
-    public ResultSet executeQuery(String sql, Object... replacements) {
-        Connection c = null;
-        PreparedStatement statement = null;
-        try {
-            c = getConnection();
-            statement = prepareStatement(c, sql, replacements);
-            return statement.executeQuery();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-                if (c != null) {
-                    c.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+    public List<EcoProfile> getAllEcoProfiles(String sql, Object... replacements) {
+        List<EcoProfile> ecoProfiles = new ArrayList<>();
+        try (Connection c = getConnection();
+             PreparedStatement statement = prepareStatement(c, sql, replacements);
+             ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+                UUID uuid = UUID.fromString(resultSet.getString("uuid"));
+                BigDecimal balance = resultSet.getBigDecimal("balance");
+                EcoProfile ecoProfile = new EcoProfile(uuid);
+                ecoProfile.setBalance(NumberFormatter.formatBigDecimal(balance));
+                ecoProfiles.add(ecoProfile);
             }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to fetch all eco profiles", e);
         }
-        return null;
+        return ecoProfiles;
     }
 
     public void executeSql(String sql, Object... replacements) {
@@ -130,12 +130,7 @@ public abstract class SQLDatabase {
         try (Connection c = getConnection(); PreparedStatement statement = prepareStatement(c,sql,replacements)) {
 
             statement.execute();
-
             long endTime = System.currentTimeMillis();
-
-            //if (this.plugin.isDebugMode()) {
-            //    this.plugin.getLogger().info("Statement executed: " + sql + " (Replacement values: " + Arrays.toString(replacements) + "). Took " + (endTime - startTime) + "ms.");
-            //}
 
         } catch (SQLException e) {
             e.printStackTrace();

@@ -18,11 +18,11 @@ public class PrepareProfileLoading {
 
     private void loadProfilesOnServerStart () {
         long start = System.currentTimeMillis();
-        List<EcoProfile> ecoProfiles = this.queryManager.getAllEcoProfiles();
+        List<EcoProfile> ecoProfiles = this.queryManager.loadAllEcoProfilesFromDatabaseInRam();
         for (EcoProfile ecoProfile : ecoProfiles) {
             LightEco.instance.getEcoProfiles().add(ecoProfile);
             Light.getConsolePrinting().debug(
-                    "Loaded profile for UUID: " + ecoProfile.getUuid() + " with balance: " + ecoProfile.getBalance());
+                    "Loaded eco profile for UUID: " + ecoProfile.getUuid() + " with balance: " + ecoProfile.getBalance());
         }
         Light.getConsolePrinting().debug("Loaded " + ecoProfiles.size() + " profiles in " + (System.currentTimeMillis() - start) + "ms");
     }

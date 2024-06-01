@@ -10,11 +10,11 @@ public class ConsolePrinting {
     }
 
     public void debug(String message) {
-        Bukkit.getConsoleSender().sendMessage(Light.consolePrefix + " §4[§cDEBUG§4]§r " + message);
+        Bukkit.getConsoleSender().sendMessage(Light.consolePrefix + "§4[§cDEBUG§4]§r " + message);
     }
 
     public void error(String message) {
-        Bukkit.getConsoleSender().sendMessage(Light.consolePrefix + " §4[§cERROR§4]§r §c" + message);
+        Bukkit.getConsoleSender().sendMessage(Light.consolePrefix + "§4[§cERROR§4]§r §c" + message);
     }
 
     public void raw(String message) { Bukkit.getConsoleSender().sendMessage(message); }

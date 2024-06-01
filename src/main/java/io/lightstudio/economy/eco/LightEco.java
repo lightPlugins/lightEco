@@ -28,7 +28,6 @@ public class LightEco implements LightModule {
     public static LightEco instance;
     private static LightEcoAPI api;
     public boolean isModuleEnabled = false;
-    public Economy economy = null;
     private QueryManager queryManager;
 
     public final String moduleName = "eco";
@@ -40,7 +39,7 @@ public class LightEco implements LightModule {
     private SettingParams settingParams;
     private static MessageParams messageParams;
 
-    private net.milkbowl.vault.economy.Economy vaultProvider;
+    private VaultImplementer vaultImplementer;
 
     private FileManager settings;
     private FileManager language;
@@ -69,6 +68,7 @@ public class LightEco implements LightModule {
             Light.getConsolePrinting().print("§4Failed to initialize start sequence while enabling module §c" + this.moduleName);
             disable();
         }
+        this.vaultImplementer = new VaultImplementer();
         registerVaultProvider();
         api = new LightEcoAPI();
 
@@ -131,9 +131,10 @@ public class LightEco implements LightModule {
     }
 
     public void registerVaultProvider() {
+        Economy vaultProvider = vaultImplementer;
+        Bukkit.getServicesManager().register(Economy.class, vaultProvider, Light.instance, ServicePriority.Highest);
         RegisteredServiceProvider<Economy> rsp = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
         if(rsp != null) {
-            Bukkit.getServicesManager().register(Economy.class, rsp.getProvider(), Light.instance, ServicePriority.Highest);
             Light.getConsolePrinting().print("Successfully registered Vault provider " + rsp.getProvider().getName());
         }
     }

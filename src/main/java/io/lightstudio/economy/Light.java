@@ -89,8 +89,10 @@ public class Light extends JavaPlugin {
 
         if(this.pluginDatabase != null) {
             SQLDatabase sqlDatabase = this.pluginDatabase;
+            getConsolePrinting().print("Finally, closing database connection...");
             sqlDatabase.close();
-            getConsolePrinting().print("§4Database is closed");
+            getConsolePrinting().print("§4Database is now closed and connection terminated.");
+            getConsolePrinting().print("See you later :)");
         }
 
         super.onDisable();

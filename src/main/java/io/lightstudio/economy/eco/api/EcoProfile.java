@@ -56,7 +56,16 @@ public class EcoProfile {
         return TransactionStatus.SUCCESS;
     }
 
-    public void setBalance(BigDecimal balance) { currentBalance = balance; }
+    public TransactionStatus setBalance(BigDecimal amount) {
+
+        if(amount.doubleValue() >= maxBalance.doubleValue()) {
+            currentBalance = maxBalance;
+            return TransactionStatus.MAX_BALANCE_EXCEEDED;
+        }
+
+        currentBalance = amount;
+        return TransactionStatus.SUCCESS;
+    }
 
     public BigDecimal getBalance() { return currentBalance; }
     public BigDecimal getMaxBalance() { return maxBalance; }

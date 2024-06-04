@@ -2,13 +2,16 @@ package io.lightstudio.economy.util.manager;
 
 import io.lightstudio.economy.Light;
 import io.lightstudio.economy.eco.LightEco;
+import io.lightstudio.economy.eco.api.EcoProfile;
 import io.lightstudio.economy.util.CompositeTabCompleter;
+import io.lightstudio.economy.util.CurrencyChecker;
 import io.lightstudio.economy.util.NumberFormatter;
 import io.lightstudio.economy.util.SubCommand;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
@@ -99,9 +102,17 @@ public class CommandManager implements CommandExecutor {
                 }
             }
 
-            if(command.getName().equals("eco")) {
+            List<String> subCommandNames = List.of("bal", "money", "eco", "economy", "balance");
 
+            if(subCommandNames.contains(command.getName()) && sender instanceof Player player) {
 
+                EcoProfile ecoProfile = LightEco.getAPI().getEcoProfile(player.getUniqueId());
+                BigDecimal balance = ecoProfile.getBalance();
+
+                Light.getMessageSender().sendPlayerMessage(LightEco.getMessageParams().moneyShow()
+                        .replace("#amount#", NumberFormatter.formatForMessages(balance))
+                        .replace("#currency#", CurrencyChecker.getCurrency(balance)), player);
+                return false;
             }
 
         return false;

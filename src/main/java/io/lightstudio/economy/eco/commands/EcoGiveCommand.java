@@ -2,6 +2,9 @@ package io.lightstudio.economy.eco.commands;
 
 import io.lightstudio.economy.Light;
 import io.lightstudio.economy.eco.LightEco;
+import io.lightstudio.economy.eco.api.EcoProfile;
+import io.lightstudio.economy.eco.api.TransactionStatus;
+import io.lightstudio.economy.util.CurrencyChecker;
 import io.lightstudio.economy.util.NumberFormatter;
 import io.lightstudio.economy.util.SubCommand;
 import org.bukkit.Bukkit;
@@ -16,7 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class DummyCommand extends SubCommand {
+public class EcoGiveCommand extends SubCommand {
     @Override
     public List<String> getName() {
         return Arrays.asList("give", "add");
@@ -29,7 +32,7 @@ public class DummyCommand extends SubCommand {
 
     @Override
     public String getSyntax() {
-        return "/eco [give,add] <player> <amount>";
+        return "/bal [give,add] <player> <amount>";
     }
 
     @Override
@@ -99,11 +102,68 @@ public class DummyCommand extends SubCommand {
             return false;
         }
 
+        EcoProfile ecoProfile = LightEco.getAPI().getEcoProfile(target.getUniqueId());
+        TransactionStatus status = ecoProfile.deposit(bg);
+        if(status.equals(TransactionStatus.SUCCESS)) {
+            Light.getMessageSender().sendPlayerMessage(LightEco.getMessageParams().depositSuccess()
+                    .replace("#amount#", NumberFormatter.formatForMessages(bg))
+                    .replace("#currency#", CurrencyChecker.getCurrency(bg))
+                    .replace("#player#", target.getName()), player);
+            return false;
+        }
+
+        Light.getMessageSender().sendPlayerMessage(LightEco.getMessageParams().depositFailed()
+                .replace("#amount#", NumberFormatter.formatForMessages(bg))
+                .replace("#currency#", CurrencyChecker.getCurrency(bg))
+                .replace("#player#", target.getName())
+                .replace("#reason#", status.toString()), player);
         return false;
     }
 
     @Override
     public boolean performAsConsole(ConsoleCommandSender sender, String[] args) throws ExecutionException, InterruptedException {
-        return false;
+        OfflinePlayer target = Bukkit.getPlayer(args[1]);
+
+        if(target == null) {
+            sender.sendMessage(LightEco.getMessageParams().playerNotFound());
+            return false;
+        }
+
+        if(!NumberFormatter.isNumber(args[2])) {
+            if(!NumberFormatter.isShortNumber(args[2])) {
+                sender.sendMessage(LightEco.getMessageParams().noNumber());
+                return false;
+            }
+        }
+
+        BigDecimal bg = NumberFormatter.parseMoney(args[2]);
+
+        if(bg == null) {
+            sender.sendMessage(LightEco.getMessageParams().noNumber());
+            return false;
+        }
+
+        if(!NumberFormatter.isPositiveNumber(bg.doubleValue())) {
+            sender.sendMessage(LightEco.getMessageParams().onlyPositive());
+            return false;
+        }
+
+        EcoProfile ecoProfile = LightEco.getAPI().getEcoProfile(target.getUniqueId());
+        TransactionStatus status = ecoProfile.deposit(bg);
+        if(status.equals(TransactionStatus.SUCCESS)) {
+            sender.sendMessage(LightEco.getMessageParams().depositSuccess()
+                    .replace("#amount#", NumberFormatter.formatForMessages(bg))
+                    .replace("#currency#", CurrencyChecker.getCurrency(bg))
+                    .replace("#player#", target.getName()));
+            return false;
+        }
+
+        sender.sendMessage(LightEco.getMessageParams().depositFailed()
+                .replace("#amount#", NumberFormatter.formatForMessages(bg))
+                .replace("#currency#", CurrencyChecker.getCurrency(bg))
+                .replace("#player#", target.getName())
+                .replace("#reason#", status.toString()));
+
+        return true;
     }
 }

@@ -28,7 +28,7 @@ public class OnPlayerJoinServer implements Listener {
         TransactionStatus status = ecoProfile.deposit(LightEco.instance.getSettingParams().defaultCurrency().getStartBalance());
         if(status.equals(TransactionStatus.SUCCESS)) {
             LightEco.instance.getEcoProfiles().add(ecoProfile);
-            LightEco.instance.getQueryManager().prepareNewAccount(uuid, true)
+            LightEco.instance.getQueryManager().prepareNewAccount(uuid, true, 0)
                     .thenAccept(success -> {
                         if (success) {
                             Light.getConsolePrinting().debug("Account preparation and generating was successful.");

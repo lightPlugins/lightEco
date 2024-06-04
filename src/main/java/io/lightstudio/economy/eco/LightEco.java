@@ -3,13 +3,17 @@ package io.lightstudio.economy.eco;
 import io.lightstudio.economy.Light;
 import io.lightstudio.economy.eco.api.EcoProfile;
 import io.lightstudio.economy.eco.api.LightEcoAPI;
-import io.lightstudio.economy.eco.commands.DummyCommand;
+import io.lightstudio.economy.eco.commands.EcoFakeCommand;
+import io.lightstudio.economy.eco.commands.EcoGiveCommand;
+import io.lightstudio.economy.eco.commands.EcoRemoveCommand;
+import io.lightstudio.economy.eco.commands.EcoSetCommand;
 import io.lightstudio.economy.eco.config.MessageParams;
 import io.lightstudio.economy.eco.config.SettingParams;
 import io.lightstudio.economy.eco.events.OnPlayerJoinServer;
 import io.lightstudio.economy.eco.implementer.VaultImplementer;
 import io.lightstudio.economy.eco.manager.PrepareProfileLoading;
 import io.lightstudio.economy.eco.manager.QueryManager;
+import io.lightstudio.economy.eco.tasks.DatabaseSynchronisation;
 import io.lightstudio.economy.util.SubCommand;
 import io.lightstudio.economy.util.interfaces.LightModule;
 import io.lightstudio.economy.util.manager.CommandManager;
@@ -29,6 +33,7 @@ public class LightEco implements LightModule {
     private static LightEcoAPI api;
     public boolean isModuleEnabled = false;
     private QueryManager queryManager;
+    private DatabaseSynchronisation databaseSynchronisation;
 
     public final String moduleName = "eco";
     public final String adminPerm = "light." + moduleName + ".admin";
@@ -68,6 +73,9 @@ public class LightEco implements LightModule {
             Light.getConsolePrinting().print("§4Failed to initialize start sequence while enabling module §c" + this.moduleName);
             disable();
         }
+        this.databaseSynchronisation = new DatabaseSynchronisation(queryManager);
+        this.databaseSynchronisation.startSync(1);
+
         this.vaultImplementer = new VaultImplementer();
         registerVaultProvider();
         api = new LightEcoAPI();
@@ -80,7 +88,9 @@ public class LightEco implements LightModule {
 
     @Override
     public void disable() {
+        this.databaseSynchronisation.forceSync();
         this.isModuleEnabled = false;
+
         Light.getConsolePrinting().print("Disabled module " + this.moduleName);
     }
 
@@ -118,8 +128,11 @@ public class LightEco implements LightModule {
     }
 
     private void initSubCommands() {
-        PluginCommand ecoCommand = Bukkit.getPluginCommand("eco");
-        subCommands.add(new DummyCommand());
+        PluginCommand ecoCommand = Bukkit.getPluginCommand("bal");
+        subCommands.add(new EcoGiveCommand());
+        subCommands.add(new EcoSetCommand());
+        subCommands.add(new EcoRemoveCommand());
+        subCommands.add(new EcoFakeCommand());
         new CommandManager(ecoCommand, subCommands);
 
     }
@@ -159,5 +172,9 @@ public class LightEco implements LightModule {
 
     public static LightEcoAPI getAPI() {
         return api;
+    }
+
+    public VaultImplementer getVaultImplementer() {
+        return vaultImplementer;
     }
 }

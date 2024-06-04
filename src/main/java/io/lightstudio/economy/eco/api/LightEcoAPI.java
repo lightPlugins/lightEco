@@ -2,6 +2,7 @@ package io.lightstudio.economy.eco.api;
 
 import io.lightstudio.economy.eco.LightEco;
 
+import java.util.List;
 import java.util.UUID;
 
 public class LightEcoAPI {
@@ -15,6 +16,10 @@ public class LightEcoAPI {
             }
         }
         return result;
+    }
+
+    public List<EcoProfile> getAllEcoProfiles() {
+        return LightEco.instance.getEcoProfiles();
     }
 
 }

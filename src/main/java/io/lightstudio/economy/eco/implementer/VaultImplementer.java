@@ -2,6 +2,7 @@ package io.lightstudio.economy.eco.implementer;
 
 import io.lightstudio.economy.Light;
 import io.lightstudio.economy.eco.LightEco;
+import io.lightstudio.economy.eco.api.EcoProfile;
 import io.lightstudio.economy.eco.api.event.VaultDepositEvent;
 import io.lightstudio.economy.eco.api.event.VaultWithdrawEvent;
 import io.lightstudio.economy.eco.api.TransactionStatus;
@@ -151,77 +152,72 @@ public class VaultImplementer implements Economy {
     @Override
     public EconomyResponse createBank(String s, String s1) {
         return new EconomyResponse(0, 0, EconomyResponse.ResponseType.NOT_IMPLEMENTED,
-                "Bank system not supported");
+                "Bank system not supported right now");
     }
 
     @Override
     public EconomyResponse createBank(String s, OfflinePlayer offlinePlayer) {
         return new EconomyResponse(0, 0, EconomyResponse.ResponseType.NOT_IMPLEMENTED,
-                "Bank system not supported");
+                "Bank system not supported right now");
     }
 
     @Override
     public EconomyResponse deleteBank(String s) {
         return new EconomyResponse(0, 0, EconomyResponse.ResponseType.NOT_IMPLEMENTED,
-                "Bank system not supported");
+                "Bank system not supported right now");
     }
 
     @Override
     public EconomyResponse bankBalance(String s) {
         return new EconomyResponse(0, 0, EconomyResponse.ResponseType.NOT_IMPLEMENTED,
-                "Bank system not supported");
+                "Bank system not supported right now");
     }
 
     @Override
     public EconomyResponse bankHas(String s, double v) {
         return new EconomyResponse(0, 0, EconomyResponse.ResponseType.NOT_IMPLEMENTED,
-                "Bank system not supported");
+                "Bank system not supported right now");
     }
 
     @Override
     public EconomyResponse bankWithdraw(String s, double v) {
         return new EconomyResponse(0, 0, EconomyResponse.ResponseType.NOT_IMPLEMENTED,
-                "Bank system not supported");
+                "Bank system not supported right now");
     }
 
     @Override
     public EconomyResponse bankDeposit(String s, double v) {
         return new EconomyResponse(0, 0, EconomyResponse.ResponseType.NOT_IMPLEMENTED,
-                "Bank system not supported");
+                "Bank system not supported right now");
     }
 
     @Override
     public EconomyResponse isBankOwner(String s, String s1) {
         return new EconomyResponse(0, 0, EconomyResponse.ResponseType.NOT_IMPLEMENTED,
-                "Bank system not supported");
+                "Bank system not supported right now");
     }
 
     @Override
     public EconomyResponse isBankOwner(String s, OfflinePlayer offlinePlayer) {
         return new EconomyResponse(0, 0, EconomyResponse.ResponseType.NOT_IMPLEMENTED,
-                "Bank system not supported");
+                "Bank system not supported right now");
     }
 
     @Override
     public EconomyResponse isBankMember(String s, String s1) {
         return new EconomyResponse(0, 0, EconomyResponse.ResponseType.NOT_IMPLEMENTED,
-                "Bank system not supported");
+                "Bank system not supported right now");
     }
 
     @Override
     public EconomyResponse isBankMember(String s, OfflinePlayer offlinePlayer) {
         return new EconomyResponse(0, 0, EconomyResponse.ResponseType.NOT_IMPLEMENTED,
-                "Bank system not supported");
+                "Bank system not supported right now");
     }
 
     @Override
     public List<String> getBanks() {
         return new ArrayList<>();
-    }
-
-    @Override
-    public boolean createPlayerAccount(String s) {
-        return false;
     }
 
     @Override
@@ -231,7 +227,7 @@ public class VaultImplementer implements Economy {
 
     @Override
     public boolean createPlayerAccount(String s, String s1) {
-        return false;
+        return createPlayerAccount(s);
     }
 
     @Override
@@ -276,6 +272,26 @@ public class VaultImplementer implements Economy {
      * TOWNY stuff ONLY !!!!
      *
      */
+
+    @Override
+    public boolean createPlayerAccount(String s) {
+
+        if(Light.isTowny) {
+            UUID uuid = Towny.getTownyUUID(s);
+            EcoProfile ecoProfile = new EcoProfile(uuid);
+            LightEco.instance.getEcoProfiles().add(ecoProfile);
+            LightEco.instance.getQueryManager().prepareNewAccount(uuid, true, 1)
+                    .thenAccept(success -> {
+                        if (success) {
+                            Light.getConsolePrinting().debug("Towny account preparation and generating was successful.");
+                        } else {
+                            Light.getConsolePrinting().error("Account preparation failed with account " + uuid + ".");
+                        }
+                    });
+        }
+
+        return false;
+    }
 
     @Override
     public boolean hasAccount(String s) {

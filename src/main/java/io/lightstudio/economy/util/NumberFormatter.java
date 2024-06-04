@@ -1,5 +1,8 @@
 package io.lightstudio.economy.util;
 
+import io.lightstudio.economy.Light;
+import io.lightstudio.economy.eco.LightEco;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.NumberFormat;
@@ -8,7 +11,10 @@ import java.util.Locale;
 public class NumberFormatter {
 
     public static BigDecimal formatBigDecimal(BigDecimal bd) {
-        return bd.setScale(2, RoundingMode.HALF_UP);
+        return bd.setScale(
+                LightEco.instance.getSettingParams().defaultCurrency().fractionalDigits() == null ?
+                2 : LightEco.instance.getSettingParams().defaultCurrency().fractionalDigits(),
+                RoundingMode.HALF_UP);  // Half-up is the math default round solution
     }
 
     public static String formatForMessages(BigDecimal number) {
@@ -19,6 +25,9 @@ public class NumberFormatter {
 
     public static boolean isNumber(String s) {
         try {
+            if (s.contains(",")) {
+                s = s.replace(",", ".");
+            }
             Double.parseDouble(s);
             return true;
         } catch (NumberFormatException e) {
@@ -32,6 +41,11 @@ public class NumberFormatter {
 
     public static BigDecimal parseMoney(String amount) {
         try {
+
+            if (amount.contains(",")) {
+                amount = amount.replace(",", ".");
+            }
+
             if (amount.matches("^\\d+$")) {
                 return formatBigDecimal(new BigDecimal(amount));
             }

@@ -43,6 +43,7 @@ public class MySQLDatabase extends PooledDatabase {
         hikari.setKeepaliveTime(connectionProperties.getKeepAliveTime());
         hikari.setMaxLifetime(connectionProperties.getMaxLifetime());
         hikari.setMinimumIdle(connectionProperties.getMinimumIdle());
+        // hikari.setMaximumPoolSize(1);
         hikari.setMaximumPoolSize(connectionProperties.getMaximumPoolSize());
         hikari.setLeakDetectionThreshold(connectionProperties.getLeakDetectionThreshold());
         hikari.setConnectionTestQuery(connectionProperties.getTestQuery());

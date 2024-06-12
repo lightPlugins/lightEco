@@ -1,5 +1,9 @@
 package io.lightstudio.economy.eco.api;
 
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.jetbrains.annotations.NotNull;
+
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -70,4 +74,12 @@ public class EcoProfile {
     public BigDecimal getBalance() { return currentBalance; }
     public BigDecimal getMaxBalance() { return maxBalance; }
     public UUID getUuid() { return uuid; }
+
+    public String getPlayerName() {
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
+        if (offlinePlayer.getName() == null) {
+            return null;
+        }
+        return offlinePlayer.getName();
+    }
 }

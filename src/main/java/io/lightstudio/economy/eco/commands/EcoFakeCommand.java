@@ -18,12 +18,12 @@ public class EcoFakeCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Register x fake dummys in Database for stress testings.";
     }
 
     @Override
     public String getSyntax() {
-        return "null";
+        return "/eco fake <amount>";
     }
 
     @Override

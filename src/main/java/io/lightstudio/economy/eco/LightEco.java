@@ -3,10 +3,7 @@ package io.lightstudio.economy.eco;
 import io.lightstudio.economy.Light;
 import io.lightstudio.economy.eco.api.EcoProfile;
 import io.lightstudio.economy.eco.api.LightEcoAPI;
-import io.lightstudio.economy.eco.commands.EcoFakeCommand;
-import io.lightstudio.economy.eco.commands.EcoGiveCommand;
-import io.lightstudio.economy.eco.commands.EcoRemoveCommand;
-import io.lightstudio.economy.eco.commands.EcoSetCommand;
+import io.lightstudio.economy.eco.commands.*;
 import io.lightstudio.economy.eco.config.MessageParams;
 import io.lightstudio.economy.eco.config.SettingParams;
 import io.lightstudio.economy.eco.events.OnPlayerJoinServer;
@@ -133,6 +130,7 @@ public class LightEco implements LightModule {
         subCommands.add(new EcoSetCommand());
         subCommands.add(new EcoRemoveCommand());
         subCommands.add(new EcoFakeCommand());
+        subCommands.add(new EcoDeleteCommand());
         new CommandManager(ecoCommand, subCommands);
 
     }

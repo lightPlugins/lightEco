@@ -73,6 +73,23 @@ public class EcoDeleteCommand extends SubCommand {
 
         String targetPlayerName = args[1];
 
+        if(targetPlayerName.equalsIgnoreCase("all")) {
+            LightEco.instance.getQueryManager().clearTableAsync()
+                    .thenAcceptAsync(cleared -> {
+                        if (cleared) {
+                            Light.getMessageSender().sendPlayerMessage(
+                                    "Successfully cleared the eco profile table.", player);
+                            Light.getConsolePrinting().debug("Cleared all eco profiles from Database");
+                        } else {
+                            Light.getMessageSender().sendPlayerMessage(
+                                    "Failed to clear the eco profile table.", player);
+                        }
+                    });
+            LightEco.instance.getEcoProfiles().clear();
+            Light.getConsolePrinting().debug("Cleared all eco profiles from RAM");
+            return false;
+        }
+
         LightEco.instance.getQueryManager().deletePlayerFromDatabaseAsync(targetPlayerName)
                 .thenAcceptAsync(deleted -> {
                     if (deleted) {

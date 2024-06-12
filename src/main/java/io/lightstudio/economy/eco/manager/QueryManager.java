@@ -2,18 +2,12 @@ package io.lightstudio.economy.eco.manager;
 
 //  999.999.999.999.999.999.999.999.999.999.999.999.999.999.999.999.999,99 -> max value for the database for NUMERIC(32, 2)
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import io.lightstudio.economy.eco.LightEco;
 import io.lightstudio.economy.eco.api.EcoProfile;
 import io.lightstudio.economy.util.PlayerParser;
 import io.lightstudio.economy.util.database.SQLDatabase;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.math.BigDecimal;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.UUID;
@@ -93,6 +87,15 @@ public class QueryManager {
                         throw new RuntimeException("Failed to delete player " + playerName + " from database", ex);
                     });
         });
+    }
+
+    public CompletableFuture<Boolean> clearTableAsync() {
+        String sql = "DELETE FROM " + tableName;
+        return database.executeSqlFutureAsync(sql)
+                .thenApplyAsync(result -> result > 0)
+                .exceptionally(ex -> {
+                    throw new RuntimeException("Failed to clear table " + tableName, ex);
+                });
     }
 
     public CompletableFuture<Integer> setBalanceFromAccount(UUID uuid, BigDecimal balance) {

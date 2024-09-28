@@ -20,6 +20,8 @@ import java.util.UUID;
 
 public class VaultImplementer implements Economy {
 
+    private final TransactionScheduler transactionScheduler = new TransactionScheduler();
+
     @Override
     public boolean isEnabled() {
         return true;
@@ -69,85 +71,53 @@ public class VaultImplementer implements Economy {
 
     @Override
     public EconomyResponse withdrawPlayer(OfflinePlayer offlinePlayer, double v) {
-
         VaultWithdrawEvent withdrawEvent = new VaultWithdrawEvent(offlinePlayer.getName(), v);
-
-        Bukkit.getScheduler().runTask(Light.instance, ()-> {
-            Bukkit.getServer().getPluginManager().callEvent(withdrawEvent);
-        });
-
+        Bukkit.getScheduler().runTask(Light.instance, () -> Bukkit.getServer().getPluginManager().callEvent(withdrawEvent));
         v = withdrawEvent.getAmount();
 
-        if(withdrawEvent.isCancelled()) {
-            return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE,
-                    "Withdraw Event was cancelled by another plugin");
+        if (withdrawEvent.isCancelled()) {
+            return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE, "Withdraw Event was cancelled by another plugin");
         }
 
-        if(!hasAccount(offlinePlayer)) {
+        if (!hasAccount(offlinePlayer)) {
             withdrawEvent.setTransactionStatus(TransactionStatus.ACCOUNT_NOT_FOUND);
             return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Player has no account");
         }
 
-        if(!has(offlinePlayer, v)) {
+        if (!has(offlinePlayer, v)) {
             withdrawEvent.setTransactionStatus(TransactionStatus.INSUFFICIENT_FUNDS);
             return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Insufficient funds");
         }
 
-        EcoProfile ecoProfile = LightEco.getAPI().getEcoProfile(offlinePlayer.getUniqueId());
+        UUID playerUUID = offlinePlayer.getUniqueId();
+        EcoProfile ecoProfile = LightEco.getAPI().getEcoProfile(playerUUID);
+        ecoProfile.withdraw(BigDecimal.valueOf(v)); // Sofortige Aktualisierung des gecachten Profils
 
-        TransactionStatus status = ecoProfile.withdraw(
-                NumberFormatter.formatBigDecimal(BigDecimal.valueOf(v)));
-
-        if(status.equals(TransactionStatus.SUCCESS)) {
-            withdrawEvent.setTransactionStatus(TransactionStatus.SUCCESS);
-
-            // EXPERIMENTAL: Update the EcoProfile directly in the database after modifying the balance.
-            LightEco.instance.getQueryManager().updateEcoProfileInDatabaseAsync(ecoProfile);
-
-            return new EconomyResponse(v, getBalance(offlinePlayer), EconomyResponse.ResponseType.SUCCESS, "");
-        }
-
-        withdrawEvent.setTransactionStatus(status);
-        return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, status.name());
+        transactionScheduler.addTransaction(playerUUID, new PendingTransactions.Transaction(PendingTransactions.Transaction.Type.WITHDRAW, v));
+        return new EconomyResponse(v, getBalance(offlinePlayer), EconomyResponse.ResponseType.SUCCESS, "");
     }
 
     @Override
     public EconomyResponse depositPlayer(OfflinePlayer offlinePlayer, double v) {
-
         VaultDepositEvent depositEvent = new VaultDepositEvent(offlinePlayer.getName(), v);
-
-        Bukkit.getScheduler().runTask(Light.instance, ()-> {
-            Bukkit.getServer().getPluginManager().callEvent(depositEvent);
-        });
-
+        Bukkit.getScheduler().runTask(Light.instance, () -> Bukkit.getServer().getPluginManager().callEvent(depositEvent));
         v = depositEvent.getAmount();
 
-        if(depositEvent.isCancelled()) {
-            return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE,
-                    "Deposit Event was cancelled by another plugin");
+        if (depositEvent.isCancelled()) {
+            return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE, "Deposit Event was cancelled by another plugin");
         }
 
-        if(!hasAccount(offlinePlayer)) {
+        if (!hasAccount(offlinePlayer)) {
             depositEvent.setTransactionStatus(TransactionStatus.ACCOUNT_NOT_FOUND);
             return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Player has no account");
         }
 
-        EcoProfile ecoProfile = LightEco.getAPI().getEcoProfile(offlinePlayer.getUniqueId());
+        UUID playerUUID = offlinePlayer.getUniqueId();
+        EcoProfile ecoProfile = LightEco.getAPI().getEcoProfile(playerUUID);
+        ecoProfile.deposit(BigDecimal.valueOf(v)); // Sofortige Aktualisierung des gecachten Profils
 
-        TransactionStatus status = ecoProfile.deposit(
-                NumberFormatter.formatBigDecimal(BigDecimal.valueOf(v)));
-
-        if (status.equals(TransactionStatus.SUCCESS)) {
-            depositEvent.setTransactionStatus(TransactionStatus.SUCCESS);
-
-            // EXPERIMENTAL: Update the EcoProfile directly in the database after modifying the balance.
-            LightEco.instance.getQueryManager().updateEcoProfileInDatabaseAsync(ecoProfile);
-
-            return new EconomyResponse(v, getBalance(offlinePlayer), EconomyResponse.ResponseType.SUCCESS, "");
-        }
-
-        depositEvent.setTransactionStatus(status);
-        return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, status.name());
+        transactionScheduler.addTransaction(playerUUID, new PendingTransactions.Transaction(PendingTransactions.Transaction.Type.DEPOSIT, v));
+        return new EconomyResponse(v, getBalance(offlinePlayer), EconomyResponse.ResponseType.SUCCESS, "");
     }
 
     /**

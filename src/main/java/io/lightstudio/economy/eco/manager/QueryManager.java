@@ -2,6 +2,7 @@ package io.lightstudio.economy.eco.manager;
 
 //  999.999.999.999.999.999.999.999.999.999.999.999.999.999.999.999.999,99 -> max value for the database for NUMERIC(32, 2)
 
+import io.lightstudio.economy.Light;
 import io.lightstudio.economy.eco.LightEco;
 import io.lightstudio.economy.eco.api.EcoProfile;
 import io.lightstudio.economy.util.PlayerParser;
@@ -66,6 +67,7 @@ public class QueryManager {
                     if (result == 0) {
                         throw new RuntimeException("Failed to update eco profile for UUID: " + ecoProfile.getUuid());
                     }
+                    Light.getConsolePrinting().debug("Updated eco profile for UUID: " + ecoProfile.getUuid() + " with balance: " + ecoProfile.getBalance());
                     return null;
                 });
     }

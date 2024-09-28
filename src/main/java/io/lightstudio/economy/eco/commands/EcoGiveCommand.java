@@ -7,6 +7,7 @@ import io.lightstudio.economy.eco.api.TransactionStatus;
 import io.lightstudio.economy.util.CurrencyChecker;
 import io.lightstudio.economy.util.NumberFormatter;
 import io.lightstudio.economy.util.SubCommand;
+import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.ConsoleCommandSender;
@@ -102,9 +103,9 @@ public class EcoGiveCommand extends SubCommand {
             return false;
         }
 
-        EcoProfile ecoProfile = LightEco.getAPI().getEcoProfile(target.getUniqueId());
-        TransactionStatus status = ecoProfile.deposit(bg);
-        if(status.equals(TransactionStatus.SUCCESS)) {
+        EconomyResponse response = LightEco.instance.getVaultImplementer().depositPlayer(target, bg.doubleValue());
+
+        if(response.transactionSuccess()) {
             Light.getMessageSender().sendPlayerMessage(LightEco.getMessageParams().depositSuccess()
                     .replace("#amount#", NumberFormatter.formatForMessages(bg))
                     .replace("#currency#", CurrencyChecker.getCurrency(bg))
@@ -116,7 +117,7 @@ public class EcoGiveCommand extends SubCommand {
                 .replace("#amount#", NumberFormatter.formatForMessages(bg))
                 .replace("#currency#", CurrencyChecker.getCurrency(bg))
                 .replace("#player#", target.getName())
-                .replace("#reason#", status.toString()), player);
+                .replace("#reason#", response.toString()), player);
         return false;
     }
 

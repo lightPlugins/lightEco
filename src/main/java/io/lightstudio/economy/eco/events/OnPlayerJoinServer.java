@@ -21,7 +21,6 @@ public class OnPlayerJoinServer implements Listener {
 
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
-        SQLDatabase database = Light.instance.getConnection();
 
 
         if(LightEco.getAPI().getEcoProfile(uuid) != null) {
@@ -39,7 +38,7 @@ public class OnPlayerJoinServer implements Listener {
             LightEco.instance.getQueryManager().prepareNewAccount(uuid, true, 0)
                     .thenAccept(success -> {
                         if (success) {
-                            Light.getConsolePrinting().debug("Account preparation and generating was successful.");
+                            Light.getConsolePrinting().debug("Account preparation and generating was successfully.");
                         } else {
                             Light.getConsolePrinting().error("Account preparation failed with account " + uuid + ".");
                             player.kickPlayer("§cAn error occurred while preparing your economy account.\n§cPlease try again later.");

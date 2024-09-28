@@ -14,6 +14,10 @@ public class OnPlayerQuitServer implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
 
+
+        // EXPERIMENTAL - Update player profile (balance) from the database on Quit Event.
+        //                Not tested and not active !!!
+
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
 

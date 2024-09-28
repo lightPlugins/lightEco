@@ -98,6 +98,8 @@ public class EcoDeleteCommand extends SubCommand {
                     } else {
                         Light.getMessageSender().sendPlayerMessage(
                                 "Failed to delete " + targetPlayerName + "'s eco profile from the database.", player);
+                        Light.getMessageSender().sendPlayerMessage(
+                                "Make sure " + targetPlayerName + "'s account is existing before deleting it !", player);
                     }
                 });
 
@@ -117,6 +119,8 @@ public class EcoDeleteCommand extends SubCommand {
                     } else {
                         Light.getConsolePrinting().error(
                                 "Failed to delete " + targetPlayerName + "'s eco profile from the database.");
+                        Light.getConsolePrinting().error(
+                                "Make sure " + targetPlayerName + "'s account is existing before deleting it !");
                     }
                 });
 

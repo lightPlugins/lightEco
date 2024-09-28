@@ -7,6 +7,7 @@ import io.lightstudio.economy.eco.api.TransactionStatus;
 import io.lightstudio.economy.util.CurrencyChecker;
 import io.lightstudio.economy.util.NumberFormatter;
 import io.lightstudio.economy.util.SubCommand;
+import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.ConsoleCommandSender;
@@ -103,10 +104,10 @@ public class EcoRemoveCommand extends SubCommand {
             return false;
         }
 
-        EcoProfile ecoProfile = LightEco.getAPI().getEcoProfile(target.getUniqueId());
-        TransactionStatus status = ecoProfile.withdraw(bg); // Ändern Sie deposit(bg) zu withdraw(bg)
-        if(status.equals(TransactionStatus.SUCCESS)) {
-            Light.getMessageSender().sendPlayerMessage(LightEco.getMessageParams().withdrawSuccess() // Ändern Sie depositSuccess() zu withdrawSuccess()
+        EconomyResponse response = LightEco.instance.getVaultImplementer().withdrawPlayer(target, bg.doubleValue());
+
+        if(response.transactionSuccess()) {
+            Light.getMessageSender().sendPlayerMessage(LightEco.getMessageParams().withdrawSuccess()
                     .replace("#amount#", NumberFormatter.formatForMessages(bg))
                     .replace("#currency#", CurrencyChecker.getCurrency(bg))
                     .replace("#player#", target.getName()), player);
@@ -117,8 +118,9 @@ public class EcoRemoveCommand extends SubCommand {
                 .replace("#amount#", NumberFormatter.formatForMessages(bg))
                 .replace("#currency#", CurrencyChecker.getCurrency(bg))
                 .replace("#player#", target.getName())
-                .replace("#reason#", status.toString()), player);
+                .replace("#reason#", response.errorMessage), player);
         return false;
+
     }
 
     @Override
@@ -149,21 +151,21 @@ public class EcoRemoveCommand extends SubCommand {
             return false;
         }
 
-        EcoProfile ecoProfile = LightEco.getAPI().getEcoProfile(target.getUniqueId());
-        TransactionStatus status = ecoProfile.withdraw(bg); // Ändern Sie deposit(bg) zu withdraw(bg)
-        if(status.equals(TransactionStatus.SUCCESS)) {
-            sender.sendMessage(LightEco.getMessageParams().withdrawSuccess() // Ändern Sie depositSuccess() zu withdrawSuccess()
+        EconomyResponse response = LightEco.instance.getVaultImplementer().withdrawPlayer(target, bg.doubleValue());
+
+        if(response.transactionSuccess()) {
+            sender.sendMessage(LightEco.getMessageParams().withdrawSuccess()
                     .replace("#amount#", NumberFormatter.formatForMessages(bg))
                     .replace("#currency#", CurrencyChecker.getCurrency(bg))
                     .replace("#player#", target.getName()));
             return false;
         }
 
-        sender.sendMessage(LightEco.getMessageParams().withdrawFailed() // Ändern Sie depositFailed() zu withdrawFailed()
+        sender.sendMessage(LightEco.getMessageParams().withdrawFailed()
                 .replace("#amount#", NumberFormatter.formatForMessages(bg))
                 .replace("#currency#", CurrencyChecker.getCurrency(bg))
                 .replace("#player#", target.getName())
-                .replace("#reason#", status.toString()));
+                .replace("#reason#", response.errorMessage));
 
         return true;
     }

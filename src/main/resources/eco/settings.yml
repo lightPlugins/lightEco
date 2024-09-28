@@ -6,10 +6,10 @@
 module-language: en
 # Here you can change the database sync time in seconds.
 # This is the time in seconds when the plugin will synchronize the database with the server.
-# Do not set this value too low, as it can cause performance issues on large server.
+# Do not set this value too low, as it can cause performance issues.
 # The default value is 120 seconds.
 database-sync-time: 120
-# Here you can enable and disable individual modules. Please note that any changes will require a server restart.
+# Here you can change some settings related to the default currency.
 default-currency:
   # Start Balance if the player comes new to the server.
   start-balance: 200.00
@@ -19,11 +19,13 @@ default-currency:
   currency-name-plural: 'EURs'
   # currency via singular
   currency-name-singular: 'EUR'
+  # This is the amount of fractional digits shown in any messages and lore's.
+  # Set it to 0 if you don't want to show no fractional digits.
   fractional-digits: 2
   # The max possible money amount. If a player reaches this value, he can't get any more money.
   # LightEconomy can process a maximum of:
-  # - 999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,99.
+  # - 999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999.99
   # This is the maximum number you can use.
-  max-pocket-balance: 999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,99
+  max-pocket-balance: 999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999.99
 main-settings:
   date-format: 'dd:MM:yyyy'

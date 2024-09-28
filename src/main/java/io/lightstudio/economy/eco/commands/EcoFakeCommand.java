@@ -18,12 +18,12 @@ public class EcoFakeCommand extends SubCommand {
 
     @Override
     public String getDescription() {
-        return "Register x fake dummys in Database for stress testings.";
+        return "Register x fake dummys in Database for stress testings. Never use this in productive environments !";
     }
 
     @Override
     public String getSyntax() {
-        return "/eco fake <amount>";
+        return "/eco fake <amountOfFakeAccounts>";
     }
 
     @Override
@@ -33,7 +33,7 @@ public class EcoFakeCommand extends SubCommand {
 
     @Override
     public String getPermission() {
-        return "dummy";
+        return "lighteconomy.eco.command.debug.fake";
     }
 
     @Override
@@ -48,6 +48,8 @@ public class EcoFakeCommand extends SubCommand {
         TestUtil.generateFakeData(amount);
         Light.getMessageSender().sendPlayerMessage(
                 "Starting to generate " + amount + " fake eco profiles", player);
+        Light.getMessageSender().sendPlayerMessage(
+                "Take a look into your console ...", player);
 
         return false;
     }

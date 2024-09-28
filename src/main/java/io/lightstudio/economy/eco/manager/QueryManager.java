@@ -54,6 +54,11 @@ public class QueryManager {
                 });
     }
 
+    public EcoProfile getEcoProfileFromDatabase(UUID uuid) {
+        String sql = "SELECT * FROM " + tableName + " WHERE uuid = ?";
+        return database.getSingleEcoProfile(sql, uuid.toString());
+    }
+
     public void updateEcoProfileInDatabaseAsync(EcoProfile ecoProfile) {
         String sql = "UPDATE " + tableName + " SET balance = ? WHERE uuid = ?";
         database.executeSqlFutureAsync(sql, ecoProfile.getBalance(), ecoProfile.getUuid().toString())

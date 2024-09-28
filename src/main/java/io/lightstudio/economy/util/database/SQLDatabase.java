@@ -118,6 +118,23 @@ public abstract class SQLDatabase {
         return ecoProfiles;
     }
 
+    public EcoProfile getSingleEcoProfile(String sql, Object... replacements) {
+        try (Connection c = getConnection();
+             PreparedStatement statement = prepareStatement(c, sql, replacements);
+             ResultSet resultSet = statement.executeQuery()) {
+            if (resultSet.next()) {
+                UUID uuid = UUID.fromString(resultSet.getString("uuid"));
+                BigDecimal balance = resultSet.getBigDecimal("balance");
+                EcoProfile ecoProfile = new EcoProfile(uuid);
+                ecoProfile.setBalance(NumberFormatter.formatBigDecimal(balance));
+                return ecoProfile;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to fetch single eco profile", e);
+        }
+        return null;
+    }
+
     public void executeSql(String sql, Object... replacements) {
 
         if (sql == null || sql.isEmpty()) {

@@ -15,6 +15,7 @@ import io.lightstudio.economy.util.SubCommand;
 import io.lightstudio.economy.util.interfaces.LightModule;
 import io.lightstudio.economy.util.manager.CommandManager;
 import io.lightstudio.economy.util.manager.FileManager;
+import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
@@ -29,6 +30,7 @@ public class LightEco implements LightModule {
     public static LightEco instance;
     private static LightEcoAPI api;
     public boolean isModuleEnabled = false;
+    @Getter
     private QueryManager queryManager;
     private DatabaseSynchronisation databaseSynchronisation;
 
@@ -36,14 +38,20 @@ public class LightEco implements LightModule {
     public final String adminPerm = "light." + moduleName + ".admin";
     public final static String tablePrefix = "lighteco_";
     private final ArrayList<SubCommand> subCommands = new ArrayList<>();
+    @Getter
     private final List<EcoProfile> ecoProfiles = new ArrayList<>();
 
+    @Getter
     private SettingParams settingParams;
+    @Getter
     private static MessageParams messageParams;
 
+    @Getter
     private VaultImplementer vaultImplementer;
 
+    @Getter
     private FileManager settings;
+    @Getter
     private FileManager language;
 
     @Override
@@ -111,10 +119,6 @@ public class LightEco implements LightModule {
         return moduleName;
     }
 
-    public FileManager getSettings() { return settings; }
-
-    public FileManager getLanguage() { return language; }
-
     private void selectLanguage() {
         this.language = Light.instance.selectLanguage(settingParams.getModuleLanguage(), moduleName);
     }
@@ -135,8 +139,6 @@ public class LightEco implements LightModule {
 
     }
 
-    public QueryManager getQueryManager() { return this.queryManager; }
-
     public void registerEvents() {
         Bukkit.getPluginManager().registerEvents(new OnPlayerJoinServer(), Light.instance);
     }
@@ -150,29 +152,14 @@ public class LightEco implements LightModule {
         }
     }
 
-    public SettingParams getSettingParams() {
-        return settingParams;
-    }
-
-    public static MessageParams getMessageParams() {
-        return messageParams;
-    }
-
     private boolean initDatabase() {
         this.queryManager = new QueryManager(Light.instance.getConnection());
         queryManager.createEcoTable();
         return true;
     }
 
-    public List<EcoProfile> getEcoProfiles() {
-        return ecoProfiles;
-    }
-
     public static LightEcoAPI getAPI() {
         return api;
     }
 
-    public VaultImplementer getVaultImplementer() {
-        return vaultImplementer;
-    }
 }

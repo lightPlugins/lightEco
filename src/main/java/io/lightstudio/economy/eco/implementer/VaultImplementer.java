@@ -93,11 +93,17 @@ public class VaultImplementer implements Economy {
             return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Insufficient funds");
         }
 
-        TransactionStatus status = LightEco.getAPI().getEcoProfile(offlinePlayer.getUniqueId()).withdraw(
+        EcoProfile ecoProfile = LightEco.getAPI().getEcoProfile(offlinePlayer.getUniqueId());
+
+        TransactionStatus status = ecoProfile.withdraw(
                 NumberFormatter.formatBigDecimal(BigDecimal.valueOf(v)));
 
         if(status.equals(TransactionStatus.SUCCESS)) {
             withdrawEvent.setTransactionStatus(TransactionStatus.SUCCESS);
+
+            // EXPERIMENTAL: Update the EcoProfile directly in the database after modifying the balance.
+            LightEco.instance.getQueryManager().updateEcoProfileInDatabaseAsync(ecoProfile);
+
             return new EconomyResponse(v, getBalance(offlinePlayer), EconomyResponse.ResponseType.SUCCESS, "");
         }
 
@@ -126,11 +132,17 @@ public class VaultImplementer implements Economy {
             return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Player has no account");
         }
 
-        TransactionStatus status = LightEco.getAPI().getEcoProfile(offlinePlayer.getUniqueId()).deposit(
+        EcoProfile ecoProfile = LightEco.getAPI().getEcoProfile(offlinePlayer.getUniqueId());
+
+        TransactionStatus status = ecoProfile.deposit(
                 NumberFormatter.formatBigDecimal(BigDecimal.valueOf(v)));
 
         if (status.equals(TransactionStatus.SUCCESS)) {
             depositEvent.setTransactionStatus(TransactionStatus.SUCCESS);
+
+            // EXPERIMENTAL: Update the EcoProfile directly in the database after modifying the balance.
+            LightEco.instance.getQueryManager().updateEcoProfileInDatabaseAsync(ecoProfile);
+
             return new EconomyResponse(v, getBalance(offlinePlayer), EconomyResponse.ResponseType.SUCCESS, "");
         }
 
@@ -290,6 +302,8 @@ public class VaultImplementer implements Economy {
                     });
         }
 
+        Light.getConsolePrinting().error("Method createPlayerAccount(String s) was called with parameter " + s);
+
         return false;
     }
 
@@ -300,6 +314,8 @@ public class VaultImplementer implements Economy {
             UUID uuid = Towny.getTownyUUID(s);
             return LightEco.getAPI().getEcoProfile(uuid) != null;
         }
+
+        Light.getConsolePrinting().error("Method hasAccount(String s) was called with parameter " + s);
 
         return false;
     }
@@ -317,6 +333,8 @@ public class VaultImplementer implements Economy {
             return NumberFormatter.formatBigDecimal(
                     LightEco.getAPI().getEcoProfile(uuid).getBalance()).doubleValue();
         }
+
+        Light.getConsolePrinting().error("Method getBalance(String s) was called with parameter " + s);
         return 0;
     }
 
@@ -326,7 +344,7 @@ public class VaultImplementer implements Economy {
         if(Light.isTowny) {
             return getBalance(s) >= v;
         }
-
+        Light.getConsolePrinting().error("Method has(String s, double v) was called with parameter " + s + " and " + v);
         return false;
     }
 
@@ -358,6 +376,8 @@ public class VaultImplementer implements Economy {
                     EconomyResponse.ResponseType.FAILURE, status.name());
         }
 
+        Light.getConsolePrinting().error("Method withdrawPlayer(String s, double v) was called with parameter " + s + " and " + v);
+
         return new EconomyResponse(0, 0,
                 EconomyResponse.ResponseType.FAILURE, "Deprecated method");
     }
@@ -382,6 +402,8 @@ public class VaultImplementer implements Economy {
             return new EconomyResponse(0, 0,
                     EconomyResponse.ResponseType.FAILURE, status.name());
         }
+
+        Light.getConsolePrinting().error("Method depositPlayer(String s, double v) was called with parameter " + s + " and " + v);
 
         return new EconomyResponse(0, 0,
                 EconomyResponse.ResponseType.FAILURE, "Deprecated method");

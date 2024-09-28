@@ -3,8 +3,10 @@ package io.lightstudio.economy.eco.events;
 import io.lightstudio.economy.Light;
 import io.lightstudio.economy.eco.LightEco;
 import io.lightstudio.economy.eco.api.EcoProfile;
+import io.lightstudio.economy.eco.api.LightEcoAPI;
 import io.lightstudio.economy.eco.api.TransactionStatus;
 import io.lightstudio.economy.eco.manager.QueryManager;
+import io.lightstudio.economy.util.database.SQLDatabase;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,8 +21,14 @@ public class OnPlayerJoinServer implements Listener {
 
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
+        SQLDatabase database = Light.instance.getConnection();
+
 
         if(LightEco.getAPI().getEcoProfile(uuid) != null) {
+
+            // EXPERIMENTAL - Update player profile (balance) from the database on Join Event.
+            EcoProfile databaseProfile = LightEco.instance.getQueryManager().getEcoProfileFromDatabase(uuid);
+            LightEco.getAPI().getEcoProfile(uuid).setBalance(databaseProfile.getBalance());
             return;
         }
 

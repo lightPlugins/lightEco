@@ -160,7 +160,7 @@ public class Light extends JavaPlugin {
         }
 
         if (Bukkit.getPluginManager().getPlugin("Towny") != null) {
-            getConsolePrinting().print("Towny is present. Hooking into PlaceholderAPI");
+            getConsolePrinting().print("Towny is present. Hooking into Towny");
             isTowny = true;
         }
 

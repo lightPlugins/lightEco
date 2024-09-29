@@ -5,7 +5,6 @@ import io.lightstudio.economy.eco.LightEco;
 import io.lightstudio.economy.eco.api.EcoProfile;
 import org.bukkit.Bukkit;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;

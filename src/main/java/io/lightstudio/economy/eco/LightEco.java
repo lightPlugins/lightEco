@@ -11,6 +11,7 @@ import io.lightstudio.economy.eco.implementer.VaultImplementer;
 import io.lightstudio.economy.eco.manager.PrepareProfileLoading;
 import io.lightstudio.economy.eco.manager.QueryManager;
 import io.lightstudio.economy.eco.tasks.DatabaseSynchronisation;
+import io.lightstudio.economy.eco.tests.StressListener;
 import io.lightstudio.economy.util.SubCommand;
 import io.lightstudio.economy.util.interfaces.LightModule;
 import io.lightstudio.economy.util.manager.CommandManager;
@@ -141,6 +142,9 @@ public class LightEco implements LightModule {
 
     public void registerEvents() {
         Bukkit.getPluginManager().registerEvents(new OnPlayerJoinServer(), Light.instance);
+
+        // TESTING AREA
+        // Bukkit.getPluginManager().registerEvents(new StressListener(), Light.instance);
     }
 
     public void registerVaultProvider() {

@@ -24,8 +24,8 @@ default-currency:
   fractional-digits: 2
   # The max possible money amount. If a player reaches this value, he can't get any more money.
   # LightEconomy can process a maximum of:
-  # - 999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999.99
+  # - max-pocket-balance: 1.7976931348623157E308
   # This is the maximum number you can use.
-  max-pocket-balance: 999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999.99
+  max-pocket-balance: 100000000000000000000
 main-settings:
   date-format: 'dd:MM:yyyy'

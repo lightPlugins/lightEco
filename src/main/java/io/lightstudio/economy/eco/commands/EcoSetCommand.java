@@ -4,6 +4,8 @@ import io.lightstudio.economy.Light;
 import io.lightstudio.economy.eco.LightEco;
 import io.lightstudio.economy.eco.api.EcoProfile;
 import io.lightstudio.economy.eco.api.TransactionStatus;
+import io.lightstudio.economy.eco.implementer.PendingTransactions;
+import io.lightstudio.economy.eco.implementer.TransactionScheduler;
 import io.lightstudio.economy.util.CurrencyChecker;
 import io.lightstudio.economy.util.NumberFormatter;
 import io.lightstudio.economy.util.SubCommand;
@@ -103,30 +105,23 @@ public class EcoSetCommand extends SubCommand {
             return false;
         }
 
-        BigDecimal currentBalance = LightEco.getAPI().getEcoProfile(target.getUniqueId()).getBalance();
-        BigDecimal difference = newBalance.subtract(currentBalance);
+        EconomyResponse economyResponse = LightEco.instance.getVaultImplementer().setPlayer(target, newBalance.doubleValue());
 
-        EconomyResponse response;
-        if (difference.compareTo(BigDecimal.ZERO) > 0) {
-            response = LightEco.instance.getVaultImplementer().depositPlayer(target, difference.doubleValue());
-        } else {
-            response = LightEco.instance.getVaultImplementer().withdrawPlayer(target, difference.abs().doubleValue());
-        }
-
-        if (response.transactionSuccess()) {
+        if(economyResponse.transactionSuccess()) {
             Light.getMessageSender().sendPlayerMessage(LightEco.getMessageParams().setSuccess()
                     .replace("#amount#", NumberFormatter.formatForMessages(newBalance))
                     .replace("#currency#", CurrencyChecker.getCurrency(newBalance))
                     .replace("#player#", target.getName()), player);
+            return true;
         } else {
             Light.getMessageSender().sendPlayerMessage(LightEco.getMessageParams().setFailed()
                     .replace("#amount#", NumberFormatter.formatForMessages(newBalance))
                     .replace("#currency#", CurrencyChecker.getCurrency(newBalance))
                     .replace("#player#", target.getName())
-                    .replace("#reason#", response.errorMessage), player);
+                    .replace("#reason#", economyResponse.errorMessage), player);
         }
 
-        return true;
+        return false;
     }
 
     @Override

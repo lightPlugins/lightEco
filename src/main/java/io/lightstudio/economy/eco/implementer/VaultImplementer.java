@@ -4,6 +4,7 @@ import io.lightstudio.economy.Light;
 import io.lightstudio.economy.eco.LightEco;
 import io.lightstudio.economy.eco.api.EcoProfile;
 import io.lightstudio.economy.eco.api.event.VaultDepositEvent;
+import io.lightstudio.economy.eco.api.event.VaultSetEvent;
 import io.lightstudio.economy.eco.api.event.VaultWithdrawEvent;
 import io.lightstudio.economy.eco.api.TransactionStatus;
 import io.lightstudio.economy.util.NumberFormatter;
@@ -92,17 +93,14 @@ public class VaultImplementer implements Economy {
 
         UUID playerUUID = offlinePlayer.getUniqueId();
         EcoProfile ecoProfile = LightEco.getAPI().getEcoProfile(playerUUID);
-        Light.getConsolePrinting().debug("Current balance A: " + ecoProfile.getBalance());
         ecoProfile.withdraw(BigDecimal.valueOf(v)); // Sofortige Aktualisierung des gecachten Profils
-        Light.getConsolePrinting().debug("Current balance B: " + ecoProfile.getBalance());
-
         transactionScheduler.addTransaction(playerUUID, new PendingTransactions.Transaction(PendingTransactions.Transaction.Type.WITHDRAW, v));
-        Light.getConsolePrinting().debug("Current balance C: " + ecoProfile.getBalance());
         return new EconomyResponse(v, getBalance(offlinePlayer), EconomyResponse.ResponseType.SUCCESS, "");
     }
 
     @Override
     public EconomyResponse depositPlayer(OfflinePlayer offlinePlayer, double v) {
+
         VaultDepositEvent depositEvent = new VaultDepositEvent(offlinePlayer.getName(), v);
         Bukkit.getScheduler().runTask(Light.instance, () -> Bukkit.getServer().getPluginManager().callEvent(depositEvent));
         v = depositEvent.getAmount();
@@ -118,13 +116,37 @@ public class VaultImplementer implements Economy {
 
         UUID playerUUID = offlinePlayer.getUniqueId();
         EcoProfile ecoProfile = LightEco.getAPI().getEcoProfile(playerUUID);
-        Light.getConsolePrinting().debug("Current balance A: " + ecoProfile.getBalance());
         ecoProfile.deposit(BigDecimal.valueOf(v)); // Sofortige Aktualisierung des gecachten Profils
-        Light.getConsolePrinting().debug("Current balance B: " + ecoProfile.getBalance());
 
         transactionScheduler.addTransaction(playerUUID, new PendingTransactions.Transaction(PendingTransactions.Transaction.Type.DEPOSIT, v));
-        Light.getConsolePrinting().debug("Current balance C: " + ecoProfile.getBalance());
         return new EconomyResponse(v, getBalance(offlinePlayer), EconomyResponse.ResponseType.SUCCESS, "");
+    }
+
+    public EconomyResponse setPlayer(OfflinePlayer offlinePlayer, double v) {
+
+        VaultSetEvent setEvent = new VaultSetEvent(offlinePlayer.getName(), v);
+        Bukkit.getScheduler().runTask(Light.instance, () -> Bukkit.getServer().getPluginManager().callEvent(setEvent));
+        v = setEvent.getAmount();
+
+        if (setEvent.isCancelled()) {
+            return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE, "Set Event was cancelled by another plugin");
+        }
+
+        if (!hasAccount(offlinePlayer)) {
+            return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Player has no account");
+        }
+
+        UUID playerUUID = offlinePlayer.getUniqueId();
+        EcoProfile ecoProfile = LightEco.getAPI().getEcoProfile(playerUUID);
+        BigDecimal newBalance = BigDecimal.valueOf(v);
+        TransactionStatus status = ecoProfile.setBalance(newBalance);
+
+        if(status.equals(TransactionStatus.SUCCESS)) {
+            transactionScheduler.addTransaction(offlinePlayer.getUniqueId(), new PendingTransactions.Transaction(PendingTransactions.Transaction.Type.SET, v));
+            return new EconomyResponse(v, getBalance(offlinePlayer), EconomyResponse.ResponseType.SUCCESS, "Successfully set balance to " + v);
+        }
+
+        return new EconomyResponse(v, getBalance(offlinePlayer), EconomyResponse.ResponseType.FAILURE, "Failed to set balance to " + v);
     }
 
     /**
@@ -266,7 +288,15 @@ public class VaultImplementer implements Economy {
     public boolean createPlayerAccount(String s) {
 
         if(Light.isTowny) {
+            Light.getConsolePrinting().debug("Creating new Towny account for " + s);
             UUID uuid = Towny.getTownyUUID(s);
+
+            if(uuid == null) {
+                Light.getConsolePrinting().error("Failed to create Towny account for " + s);
+                return true;
+            }
+
+            Light.getConsolePrinting().debug("UUID for " + s + " is " + uuid);
             EcoProfile ecoProfile = new EcoProfile(uuid);
             LightEco.instance.getEcoProfiles().add(ecoProfile);
             LightEco.instance.getQueryManager().prepareNewAccount(uuid, true, 1)
@@ -274,9 +304,10 @@ public class VaultImplementer implements Economy {
                         if (success) {
                             Light.getConsolePrinting().debug("Towny account preparation and generating was successful.");
                         } else {
-                            Light.getConsolePrinting().error("Account preparation failed with account " + uuid + ".");
+                            Light.getConsolePrinting().error("Towny Account preparation failed with account " + uuid + ".");
                         }
                     });
+            return true;
         }
 
         Light.getConsolePrinting().error("Method createPlayerAccount(String s) was called with parameter " + s);
@@ -301,7 +332,7 @@ public class VaultImplementer implements Economy {
     public double getBalance(String s) {
 
         if(Light.isTowny) {
-
+            Light.getConsolePrinting().debug("Checking Towny balance of " + s);
             if(!hasAccount(s)) {
                 return 0;
             }
@@ -311,7 +342,9 @@ public class VaultImplementer implements Economy {
                     LightEco.getAPI().getEcoProfile(uuid).getBalance()).doubleValue();
         }
 
-        Light.getConsolePrinting().error("Method getBalance(String s) was called with parameter " + s);
+        Light.getConsolePrinting().error(
+                "Method withdrawPlayer(String s, double v) was called with parameter " + s +
+                        " but Towny is not enabled! Please contact the developer!");
         return 0;
     }
 
@@ -319,9 +352,12 @@ public class VaultImplementer implements Economy {
     public boolean has(String s, double v) {
 
         if(Light.isTowny) {
+            Light.getConsolePrinting().debug("Checking Towny has of " + s);
             return getBalance(s) >= v;
         }
-        Light.getConsolePrinting().error("Method has(String s, double v) was called with parameter " + s + " and " + v);
+        Light.getConsolePrinting().error(
+                "Method withdrawPlayer(String s, double v) was called with parameter " + s + " and " + v +
+                        " but Towny is not enabled! Please contact the developer!");
         return false;
     }
 
@@ -329,7 +365,7 @@ public class VaultImplementer implements Economy {
     public EconomyResponse withdrawPlayer(String s, double v) {
 
         if(Light.isTowny) {
-
+            Light.getConsolePrinting().debug("Towny WithdrawPlayer was called with " + s + " and " + v);
             if(!hasAccount(s)) {
                 return new EconomyResponse(0, 0,
                         EconomyResponse.ResponseType.FAILURE, "Town has no account");
@@ -337,7 +373,7 @@ public class VaultImplementer implements Economy {
 
             if(!has(s, v)) {
                 return new EconomyResponse(0, 0,
-                        EconomyResponse.ResponseType.FAILURE, "Insufficient funds");
+                        EconomyResponse.ResponseType.FAILURE, "Town has Insufficient funds");
             }
 
             UUID uuid = Towny.getTownyUUID(s);
@@ -353,7 +389,9 @@ public class VaultImplementer implements Economy {
                     EconomyResponse.ResponseType.FAILURE, status.name());
         }
 
-        Light.getConsolePrinting().error("Method withdrawPlayer(String s, double v) was called with parameter " + s + " and " + v);
+        Light.getConsolePrinting().error(
+                "Method withdrawPlayer(String s, double v) was called with parameter " + s + " and " + v +
+                        " but Towny is not enabled! Please contact the developer!");
 
         return new EconomyResponse(0, 0,
                 EconomyResponse.ResponseType.FAILURE, "Deprecated method");
@@ -363,7 +401,7 @@ public class VaultImplementer implements Economy {
     public EconomyResponse depositPlayer(String s, double v) {
 
         if(Light.isTowny) {
-
+            Light.getConsolePrinting().debug("Towny DepositPlayer was called with " + s + " and " + v);
             if(!hasAccount(s)) {
                 return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Town has no account");
             }
@@ -380,32 +418,39 @@ public class VaultImplementer implements Economy {
                     EconomyResponse.ResponseType.FAILURE, status.name());
         }
 
-        Light.getConsolePrinting().error("Method depositPlayer(String s, double v) was called with parameter " + s + " and " + v);
+        Light.getConsolePrinting().error(
+                "Method depositPlayer(String s, double v) was called with parameter " + s + " and " + v +
+                        " but Towny is not enabled! Please contact the developer!");
 
         return new EconomyResponse(0, 0,
                 EconomyResponse.ResponseType.FAILURE, "Deprecated method");
     }
 
+    @Deprecated(since = "LightEconomy does not advise the use of this method!")
     @Override
     public boolean hasAccount(String s, String s1) {
         return hasAccount(s);
     }
 
+    @Deprecated(since = "LightEconomy does not advise the use of this method!")
     @Override
     public double getBalance(String s, String s1) {
         return getBalance(s);
     }
 
+    @Deprecated(since = "LightEconomy does not advise the use of this method!")
     @Override
     public boolean has(String s, String s1, double v) {
         return has(s, v);
     }
 
+    @Deprecated(since = "LightEconomy does not advise the use of this method!")
     @Override
     public EconomyResponse withdrawPlayer(String s, String s1, double v) {
         return withdrawPlayer(s, v);
     }
 
+    @Deprecated(since = "LightEconomy does not advise the use of this method!")
     @Override
     public EconomyResponse depositPlayer(String s, String s1, double v) {
         return depositPlayer(s, v);

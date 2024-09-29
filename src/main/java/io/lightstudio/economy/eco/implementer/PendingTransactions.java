@@ -35,6 +35,9 @@ public class PendingTransactions {
             return ecoProfile.getBalance().compareTo(BigDecimal.valueOf(transaction.getAmount())) >= 0;
         } else if (transaction.getType() == Transaction.Type.WITHDRAW) {
             return ecoProfile.getBalance().compareTo(BigDecimal.valueOf(transaction.getAmount())) <= 0;
+        } else if (transaction.getType() == Transaction.Type.SET) {
+            return ecoProfile.getBalance().compareTo(BigDecimal.valueOf(transaction.getAmount())) == 0;
+
         }
         return false;
     }
@@ -46,7 +49,7 @@ public class PendingTransactions {
         @Setter
         private boolean processed;
 
-        public enum Type {DEPOSIT, WITHDRAW}
+        public enum Type {DEPOSIT, WITHDRAW, SET}
 
         public Transaction(Type type, double amount) {
             this.type = type;

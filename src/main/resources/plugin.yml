@@ -5,7 +5,7 @@ main: io.lightstudio.economy.Light
 api-version: 1.13
 depend: ["PlaceholderAPI", "Vault"]
 softdepend: ["Towny"]
-loadbefore: [CoinsEngine]
+loadbefore: [CoinsEngine, EssentialsX, Towny]
 libraries: []
 #  - org.mariadb.jdbc:mariadb-java-client:2.7.4
 #  - com.zaxxer:HikariCP:5.1.0

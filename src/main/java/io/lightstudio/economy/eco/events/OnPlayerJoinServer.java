@@ -22,7 +22,6 @@ public class OnPlayerJoinServer implements Listener {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
 
-
         if(LightEco.getAPI().getEcoProfile(uuid) != null) {
 
             // EXPERIMENTAL - Update player profile (balance) from the database on Join Event.
@@ -32,7 +31,7 @@ public class OnPlayerJoinServer implements Listener {
         }
 
         EcoProfile ecoProfile = new EcoProfile(uuid);
-        TransactionStatus status = ecoProfile.deposit(LightEco.instance.getSettingParams().defaultCurrency().getStartBalance());
+        TransactionStatus status = ecoProfile.deposit(LightEco.getSettingParams().defaultCurrency().getStartBalance());
         if(status.equals(TransactionStatus.SUCCESS)) {
             LightEco.instance.getEcoProfiles().add(ecoProfile);
             LightEco.instance.getQueryManager().prepareNewAccount(uuid, true, 0)

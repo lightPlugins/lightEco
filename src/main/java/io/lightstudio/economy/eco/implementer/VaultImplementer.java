@@ -34,7 +34,7 @@ public class VaultImplementer implements Economy {
 
     @Override
     public int fractionalDigits() {
-        return LightEco.instance.getSettingParams().defaultCurrency().fractionalDigits();
+        return LightEco.getSettingParams().defaultCurrency().fractionalDigits();
     }
 
     @Override
@@ -45,12 +45,12 @@ public class VaultImplementer implements Economy {
 
     @Override
     public String currencyNamePlural() {
-        return LightEco.instance.getSettingParams().defaultCurrency().currencyPluralName();
+        return LightEco.getSettingParams().defaultCurrency().currencyPluralName();
     }
 
     @Override
     public String currencyNameSingular() {
-        return LightEco.instance.getSettingParams().defaultCurrency().currencySingularName();
+        return LightEco.getSettingParams().defaultCurrency().currencySingularName();
     }
 
     @Override
@@ -71,6 +71,7 @@ public class VaultImplementer implements Economy {
 
     @Override
     public EconomyResponse withdrawPlayer(OfflinePlayer offlinePlayer, double v) {
+        Light.getConsolePrinting().debug("WithdrawPlayer was called with " + offlinePlayer.getName() + " and " + v);
         VaultWithdrawEvent withdrawEvent = new VaultWithdrawEvent(offlinePlayer.getName(), v);
         Bukkit.getScheduler().runTask(Light.instance, () -> Bukkit.getServer().getPluginManager().callEvent(withdrawEvent));
         v = withdrawEvent.getAmount();
@@ -91,9 +92,12 @@ public class VaultImplementer implements Economy {
 
         UUID playerUUID = offlinePlayer.getUniqueId();
         EcoProfile ecoProfile = LightEco.getAPI().getEcoProfile(playerUUID);
+        Light.getConsolePrinting().debug("Current balance A: " + ecoProfile.getBalance());
         ecoProfile.withdraw(BigDecimal.valueOf(v)); // Sofortige Aktualisierung des gecachten Profils
+        Light.getConsolePrinting().debug("Current balance B: " + ecoProfile.getBalance());
 
         transactionScheduler.addTransaction(playerUUID, new PendingTransactions.Transaction(PendingTransactions.Transaction.Type.WITHDRAW, v));
+        Light.getConsolePrinting().debug("Current balance C: " + ecoProfile.getBalance());
         return new EconomyResponse(v, getBalance(offlinePlayer), EconomyResponse.ResponseType.SUCCESS, "");
     }
 
@@ -114,9 +118,12 @@ public class VaultImplementer implements Economy {
 
         UUID playerUUID = offlinePlayer.getUniqueId();
         EcoProfile ecoProfile = LightEco.getAPI().getEcoProfile(playerUUID);
+        Light.getConsolePrinting().debug("Current balance A: " + ecoProfile.getBalance());
         ecoProfile.deposit(BigDecimal.valueOf(v)); // Sofortige Aktualisierung des gecachten Profils
+        Light.getConsolePrinting().debug("Current balance B: " + ecoProfile.getBalance());
 
         transactionScheduler.addTransaction(playerUUID, new PendingTransactions.Transaction(PendingTransactions.Transaction.Type.DEPOSIT, v));
+        Light.getConsolePrinting().debug("Current balance C: " + ecoProfile.getBalance());
         return new EconomyResponse(v, getBalance(offlinePlayer), EconomyResponse.ResponseType.SUCCESS, "");
     }
 

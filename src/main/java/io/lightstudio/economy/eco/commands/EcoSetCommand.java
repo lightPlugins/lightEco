@@ -91,54 +91,39 @@ public class EcoSetCommand extends SubCommand {
             }
         }
 
-        BigDecimal bg = NumberFormatter.parseMoney(args[2]);
+        BigDecimal newBalance = NumberFormatter.parseMoney(args[2]);
 
-        if (bg == null) {
+        if (newBalance == null) {
             Light.getMessageSender().sendPlayerMessage(LightEco.getMessageParams().noNumber(), player);
             return false;
         }
 
-        if (!NumberFormatter.isPositiveNumber(bg.doubleValue())) {
+        if (!NumberFormatter.isPositiveNumber(newBalance.doubleValue())) {
             Light.getMessageSender().sendPlayerMessage(LightEco.getMessageParams().onlyPositive(), player);
             return false;
         }
 
         BigDecimal currentBalance = LightEco.getAPI().getEcoProfile(target.getUniqueId()).getBalance();
+        BigDecimal difference = newBalance.subtract(currentBalance);
 
-        if (currentBalance.compareTo(bg) < 0) {
-            BigDecimal difference = bg.subtract(currentBalance);
-            EconomyResponse response = LightEco.instance.getVaultImplementer().depositPlayer(target, difference.doubleValue());
-            if (response.transactionSuccess()) {
-                Light.getMessageSender().sendPlayerMessage(LightEco.getMessageParams().setSuccess()
-                        .replace("#amount#", NumberFormatter.formatForMessages(bg))
-                        .replace("#currency#", CurrencyChecker.getCurrency(bg))
-                        .replace("#player#", target.getName()), player);
-            } else {
-                Light.getMessageSender().sendPlayerMessage(LightEco.getMessageParams().setFailed()
-                        .replace("#amount#", NumberFormatter.formatForMessages(bg))
-                        .replace("#currency#", CurrencyChecker.getCurrency(bg))
-                        .replace("#player#", target.getName())
-                        .replace("#reason#", response.errorMessage), player);
-            }
-        } else if (currentBalance.compareTo(bg) > 0) {
-            BigDecimal difference = currentBalance.subtract(bg);
-            EconomyResponse response = LightEco.instance.getVaultImplementer().withdrawPlayer(target, difference.doubleValue());
-            if (response.transactionSuccess()) {
-                Light.getMessageSender().sendPlayerMessage(LightEco.getMessageParams().setSuccess()
-                        .replace("#amount#", NumberFormatter.formatForMessages(bg))
-                        .replace("#currency#", CurrencyChecker.getCurrency(bg))
-                        .replace("#player#", target.getName()), player);
-            } else {
-                Light.getMessageSender().sendPlayerMessage(LightEco.getMessageParams().setFailed()
-                        .replace("#amount#", NumberFormatter.formatForMessages(bg))
-                        .replace("#currency#", CurrencyChecker.getCurrency(bg))
-                        .replace("#player#", target.getName())
-                        .replace("#reason#", response.errorMessage), player);
-            }
+        EconomyResponse response;
+        if (difference.compareTo(BigDecimal.ZERO) > 0) {
+            response = LightEco.instance.getVaultImplementer().depositPlayer(target, difference.doubleValue());
         } else {
-            // Maybe extra message for same balance and set amount.
-            // Just a test message here.
-            Light.getMessageSender().sendPlayerMessage("§cNothing has changed. Same current balance as the set amount", player);
+            response = LightEco.instance.getVaultImplementer().withdrawPlayer(target, difference.abs().doubleValue());
+        }
+
+        if (response.transactionSuccess()) {
+            Light.getMessageSender().sendPlayerMessage(LightEco.getMessageParams().setSuccess()
+                    .replace("#amount#", NumberFormatter.formatForMessages(newBalance))
+                    .replace("#currency#", CurrencyChecker.getCurrency(newBalance))
+                    .replace("#player#", target.getName()), player);
+        } else {
+            Light.getMessageSender().sendPlayerMessage(LightEco.getMessageParams().setFailed()
+                    .replace("#amount#", NumberFormatter.formatForMessages(newBalance))
+                    .replace("#currency#", CurrencyChecker.getCurrency(newBalance))
+                    .replace("#player#", target.getName())
+                    .replace("#reason#", response.errorMessage), player);
         }
 
         return true;
@@ -175,6 +160,8 @@ public class EcoSetCommand extends SubCommand {
         BigDecimal currentBalance = LightEco.getAPI().getEcoProfile(target.getUniqueId()).getBalance();
 
         if (currentBalance.compareTo(bg) < 0) {
+
+            //                      50          10  = 40
             BigDecimal difference = bg.subtract(currentBalance);
             EconomyResponse response = LightEco.instance.getVaultImplementer().depositPlayer(target, difference.doubleValue());
             if (response.transactionSuccess()) {

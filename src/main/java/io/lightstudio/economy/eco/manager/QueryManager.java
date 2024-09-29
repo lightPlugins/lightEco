@@ -44,7 +44,7 @@ public class QueryManager {
     }
 
     public CompletableFuture<Boolean> prepareNewAccount(UUID uuid, boolean withStartBalance, int isTowny) {
-        BigDecimal startBalance = LightEco.instance.getSettingParams().defaultCurrency().getStartBalance();
+        BigDecimal startBalance = LightEco.getSettingParams().defaultCurrency().getStartBalance();
         String query = "INSERT INTO " + tableName + "(uuid, balance, is_towny) VALUES (?,?,?)";
 
         return database.executeSqlFutureAsync(query, uuid.toString(), withStartBalance ? startBalance : 0.0, isTowny)
@@ -67,7 +67,7 @@ public class QueryManager {
                     if (result == 0) {
                         throw new RuntimeException("Failed to update eco profile for UUID: " + ecoProfile.getUuid());
                     }
-                    Light.getConsolePrinting().debug("Updated eco profile for UUID: " + ecoProfile.getUuid() + " with balance: " + ecoProfile.getBalance());
+                    // Light.getConsolePrinting().debug("Updated eco profile for UUID: " + ecoProfile.getUuid() + " with balance: " + ecoProfile.getBalance());
                     return null;
                 });
     }

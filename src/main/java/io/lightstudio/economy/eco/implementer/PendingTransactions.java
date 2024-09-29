@@ -34,7 +34,7 @@ public class PendingTransactions {
         if (transaction.getType() == Transaction.Type.DEPOSIT) {
             return ecoProfile.getBalance().compareTo(BigDecimal.valueOf(transaction.getAmount())) >= 0;
         } else if (transaction.getType() == Transaction.Type.WITHDRAW) {
-            return ecoProfile.getBalance().compareTo(BigDecimal.valueOf(transaction.getAmount())) < 0;
+            return ecoProfile.getBalance().compareTo(BigDecimal.valueOf(transaction.getAmount())) <= 0;
         }
         return false;
     }

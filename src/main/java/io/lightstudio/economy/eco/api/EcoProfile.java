@@ -1,5 +1,8 @@
 package io.lightstudio.economy.eco.api;
 
+import io.lightstudio.economy.eco.LightEco;
+import io.lightstudio.economy.eco.config.SettingParams;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
@@ -9,14 +12,16 @@ import java.util.UUID;
 
 public class EcoProfile {
 
+    @Getter
     private final UUID uuid;
     private BigDecimal currentBalance;
+    @Getter
     private final BigDecimal maxBalance;
 
     public EcoProfile(UUID uuid) {
         this.uuid = uuid;
         this.currentBalance = BigDecimal.ZERO;
-        this.maxBalance = BigDecimal.valueOf(1000000);
+        this.maxBalance = BigDecimal.valueOf(LightEco.getSettingParams().defaultCurrency().maxPocketBalance());
     }
 
     public TransactionStatus deposit(BigDecimal amount) {
@@ -72,8 +77,6 @@ public class EcoProfile {
     }
 
     public BigDecimal getBalance() { return currentBalance; }
-    public BigDecimal getMaxBalance() { return maxBalance; }
-    public UUID getUuid() { return uuid; }
 
     public String getPlayerName() {
         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);

@@ -171,7 +171,7 @@
                                     <shadedPattern>io.lightstudio.economy.util.libs.inventory</shadedPattern>
                                 </relocation>
                             </relocations>
-                            <outputFile>C:/Users/phili/Documents/05 Minecraft Plugins/plugins/${project.artifactId}-${project.version}-SNAPSHOT.jar</outputFile>
+                            <outputFile>C:/Users/philipp/Desktop/mc/plugins/${project.artifactId}-${project.version}-SNAPSHOT.jar</outputFile>
                             <filters>
                                 <filter>
                                     <artifact>*:*</artifact>

@@ -30,19 +30,22 @@ public class TransactionScheduler {
 
             Light.getConsolePrinting().debug("PendingTransaction - Processing transactions for " + playerUUID + " with current amount of " + ecoProfile.getBalance() + "EUR.");
 
+/*
             for (PendingTransactions.Transaction transaction : pendingTransactions.getTransactions()) {
                 if (!transaction.isProcessed() && !pendingTransactions.isTransactionProcessed(transaction, ecoProfile)) {
                     if (transaction.getType() == PendingTransactions.Transaction.Type.DEPOSIT) {
                         ecoProfile.deposit(BigDecimal.valueOf(transaction.getAmount()));
                         Light.getConsolePrinting().debug("PendingTransaction - Deposited " + transaction.getAmount() + " to " + playerUUID);
+                        Light.getConsolePrinting().debug("Current balance D: " + ecoProfile.getBalance());
                     } else if (transaction.getType() == PendingTransactions.Transaction.Type.WITHDRAW) {
                         ecoProfile.withdraw(BigDecimal.valueOf(transaction.getAmount()));
                         Light.getConsolePrinting().debug("PendingTransaction - Withdrawn " + transaction.getAmount() + " from " + playerUUID);
+                        Light.getConsolePrinting().debug("Current balance D: " + ecoProfile.getBalance());
                     }
                     transaction.setProcessed(true);
                 }
             }
-
+*/
             LightEco.instance.getQueryManager().updateEcoProfileInDatabaseAsync(ecoProfile);
             Light.getConsolePrinting().debug("PendingTransaction - Updated " + playerUUID + " with new balance of " + ecoProfile.getBalance() + "EUR in database successfully.");
             pendingTransactions.clearTransactions();

@@ -103,6 +103,14 @@ public class EcoDeleteCommand extends SubCommand {
                     }
                 });
 
+        LightEco.instance.getEcoProfiles().removeIf(profile -> profile.getPlayerName().equals(targetPlayerName));
+
+        Player targetAccountPlayer = Bukkit.getPlayer(targetPlayerName);
+
+        if(targetAccountPlayer != null) {
+            targetAccountPlayer.kickPlayer("§cYour eco profile has been deleted.\n§cPlease rejoin the server!");
+        }
+
         return true;
     }
 

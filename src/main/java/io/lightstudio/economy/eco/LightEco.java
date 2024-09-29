@@ -42,7 +42,7 @@ public class LightEco implements LightModule {
     private final List<EcoProfile> ecoProfiles = new ArrayList<>();
 
     @Getter
-    private SettingParams settingParams;
+    private static SettingParams settingParams;
     @Getter
     private static MessageParams messageParams;
 

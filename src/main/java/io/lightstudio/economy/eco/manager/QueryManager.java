@@ -23,11 +23,6 @@ public class QueryManager {
         this.database = database;
     }
 
-    public CompletableFuture<ResultSet> test() {
-        String query = "SELECT * FROM " + tableName;
-        return database.executeQueryAsync(query);
-    }
-
     public void createEcoTable() {
         String query =
                 "CREATE TABLE IF NOT EXISTS " + tableName + "(" +
@@ -82,8 +77,6 @@ public class QueryManager {
                     return null;
                 });
     }
-
-
 
     public CompletableFuture<Boolean> deletePlayerFromDatabaseAsync(String playerName) {
         return PlayerParser.getPlayerUUID(playerName).thenCompose(uuid -> {

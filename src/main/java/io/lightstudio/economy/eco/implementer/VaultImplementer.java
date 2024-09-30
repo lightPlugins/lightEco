@@ -320,6 +320,14 @@ public class VaultImplementer implements Economy {
 
         if(Light.isTowny) {
             UUID uuid = Towny.getTownyUUID(s);
+
+            if(uuid == null) {
+                OfflinePlayer offlinePlayer = Bukkit.getPlayer(s);
+                if(offlinePlayer != null) {
+                    return LightEco.getAPI().getEcoProfile(offlinePlayer.getUniqueId()) != null;
+                }
+            }
+
             return LightEco.getAPI().getEcoProfile(uuid) != null;
         }
 
@@ -333,11 +341,21 @@ public class VaultImplementer implements Economy {
 
         if(Light.isTowny) {
             Light.getConsolePrinting().debug("Checking Towny balance of " + s);
+
             if(!hasAccount(s)) {
                 return 0;
             }
 
             UUID uuid = Towny.getTownyUUID(s);
+
+            if(uuid == null) {
+                OfflinePlayer offlinePlayer = Bukkit.getPlayer(s);
+                if(offlinePlayer != null) {
+                    return LightEco.getAPI().getEcoProfile(offlinePlayer.getUniqueId()).getBalance().doubleValue();
+
+                }
+            }
+
             return NumberFormatter.formatBigDecimal(
                     LightEco.getAPI().getEcoProfile(uuid).getBalance()).doubleValue();
         }
@@ -377,6 +395,14 @@ public class VaultImplementer implements Economy {
             }
 
             UUID uuid = Towny.getTownyUUID(s);
+
+            if(uuid == null) {
+                OfflinePlayer offlinePlayer = Bukkit.getPlayer(s);
+                if(offlinePlayer != null) {
+                    uuid = offlinePlayer.getUniqueId();
+                }
+            }
+
             TransactionStatus status = LightEco.getAPI().getEcoProfile(uuid).withdraw(
                     NumberFormatter.formatBigDecimal(BigDecimal.valueOf(v)));
 
@@ -406,7 +432,16 @@ public class VaultImplementer implements Economy {
                 return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Town has no account");
             }
 
-            TransactionStatus status = LightEco.getAPI().getEcoProfile(Towny.getTownyUUID(s)).deposit(
+            UUID uuid = Towny.getTownyUUID(s);
+
+            if(uuid == null) {
+                OfflinePlayer offlinePlayer = Bukkit.getPlayer(s);
+                if(offlinePlayer != null) {
+                    uuid = offlinePlayer.getUniqueId();
+                }
+            }
+
+            TransactionStatus status = LightEco.getAPI().getEcoProfile(uuid).deposit(
                     NumberFormatter.formatBigDecimal(BigDecimal.valueOf(v)));
 
             if (status.equals(TransactionStatus.SUCCESS)) {

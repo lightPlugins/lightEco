@@ -407,6 +407,7 @@ public class VaultImplementer implements Economy {
                     NumberFormatter.formatBigDecimal(BigDecimal.valueOf(v)));
 
             if(status.equals(TransactionStatus.SUCCESS)) {
+                transactionScheduler.addTransaction(uuid, new PendingTransactions.Transaction(PendingTransactions.Transaction.Type.WITHDRAW, v));
                 return new EconomyResponse(v, getBalance(s),
                         EconomyResponse.ResponseType.SUCCESS, "");
             }
@@ -445,6 +446,7 @@ public class VaultImplementer implements Economy {
                     NumberFormatter.formatBigDecimal(BigDecimal.valueOf(v)));
 
             if (status.equals(TransactionStatus.SUCCESS)) {
+                transactionScheduler.addTransaction(uuid, new PendingTransactions.Transaction(PendingTransactions.Transaction.Type.DEPOSIT, v));
                 return new EconomyResponse(v, getBalance(s),
                         EconomyResponse.ResponseType.SUCCESS, "");
             }

@@ -204,22 +204,22 @@ public class EcoGiveCommand extends SubCommand {
 
             HashMap<EcoProfile, EconomyResponse> failedProfiles = new HashMap<>();
 
-            List<EcoProfile> testA = new ArrayList<>(ecoProfiles.stream().toList());
-            List<EcoProfile> testB = new ArrayList<>(ecoProfiles.stream().toList());
-            testA.removeIf(ecoProfile -> Towny.getTownyUUID(ecoProfile.getUuid().toString()) != null);
-            testB.removeIf(ecoProfile -> Towny.getTownyUUID(ecoProfile.getUuid().toString()) == null);
+            List<EcoProfile> filteredEcoProfiles = new ArrayList<>();
+            for (EcoProfile ecoProfile : ecoProfiles) {
 
-            Light.getConsolePrinting().debug("Test A: " + testA.size()); // result = 3
-            Light.getConsolePrinting().debug("Test B: " + testB.size()); // result = 0
+                if (!Towny.isTownyUUID(ecoProfile.getUuid())) {
+                    Light.getConsolePrinting().debug("Player Account: " + ecoProfile.getUuid().toString());
+                    filteredEcoProfiles.add(ecoProfile);
+                    continue;
+                }
 
-            List<EcoProfile> filteredEcoProfiles = ecoProfiles.stream()
-                    .filter(ecoProfile -> Towny.getTownyUUID(ecoProfile.getUuid().toString()) == null).toList();
+                Light.getConsolePrinting().debug("Skipping towny, resident or npc: " + ecoProfile.getUuid().toString());
+            }
 
             for (EcoProfile ecoProfile : filteredEcoProfiles) {
                 OfflinePlayer targetPlayer = Bukkit.getPlayer(ecoProfile.getUuid());
                 if(targetPlayer != null) {
                     EconomyResponse response = LightEco.instance.getVaultImplementer().depositPlayer(targetPlayer, bg.doubleValue());
-
                     if(!response.transactionSuccess()) {
                         failedProfiles.put(ecoProfile, response);
                     }

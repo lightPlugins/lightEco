@@ -46,3 +46,18 @@ withdrawSuccess: '<gray>Successfully withdrawn <#ffdc73>#amount# <gray>#currency
 withdrawFailed: '<red>Failed to withdraw <dark_red>#amount# <red>#currency# from <dark_red>#player#<red>. <gray>Reason: <red>#reason#'
 setSuccess: '<gray>Successfully set <#ffdc73>#amount# <gray>#currency# for <#ffdc73>#player#<gray>.'
 setFailed: '<red>Failed to set <dark_red>#amount# <red>#currency# for <dark_red>#player#<red>. <gray>Reason: <red>#reason#'
+#   Title Animations
+titleDeposit:
+  count:
+    title: '<gray>Deposit <red>cto <gray>wallet'
+    subtitle: '<green>+ <gray>#amount# #currency#'
+  final:
+    title: '<green>+ <gray>#amount# #currency#'
+    subtitle: '<gray>You received a deposit'
+titleWithdraw:
+  count:
+    title: '<gray>Withdraw <red>from <gray>wallet'
+    subtitle: '<red>- <gray>#amount# #currency#'
+  final:
+    title: '<red>- <gray>#amount# #currency#'
+    subtitle: '<gray>You made a withdrawal'

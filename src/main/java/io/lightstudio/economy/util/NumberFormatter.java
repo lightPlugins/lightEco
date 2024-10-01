@@ -11,15 +11,16 @@ import java.util.Locale;
 public class NumberFormatter {
 
     public static BigDecimal formatBigDecimal(BigDecimal bd) {
-        return bd.setScale(
-                LightEco.instance.getSettingParams().defaultCurrency().fractionalDigits() == null ?
-                2 : LightEco.instance.getSettingParams().defaultCurrency().fractionalDigits(),
-                RoundingMode.HALF_UP);  // Half-up is the math default round solution
+        int fractionalDigits = LightEco.getSettingParams().defaultCurrency().fractionalDigits();
+        return bd.setScale(fractionalDigits, RoundingMode.HALF_UP);  // Half-up is the math default round solution
     }
 
     public static String formatForMessages(BigDecimal number) {
         Locale locale = Locale.getDefault();
         NumberFormat formatter = NumberFormat.getInstance(locale);
+        int fractionalDigits = LightEco.getSettingParams().defaultCurrency().fractionalDigits();
+        formatter.setMinimumFractionDigits(fractionalDigits); // Ensure at least two decimal places
+        formatter.setMaximumFractionDigits(fractionalDigits);
         return formatter.format(formatBigDecimal(number));
     }
 

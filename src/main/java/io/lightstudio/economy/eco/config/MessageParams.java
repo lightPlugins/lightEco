@@ -31,4 +31,14 @@ public class MessageParams {
     public String setSuccess() { return config.getString("setSuccess"); }
     public String setFailed() { return config.getString("setFailed"); }
 
+    public String titleDepositCountTitle() { return config.getString("titleDeposit.count.title"); }
+    public String titleDepositCountSubtitle() { return config.getString("titleDeposit.count.subtitle"); }
+    public String titleDepositFinalTitle() { return config.getString("titleDeposit.final.title"); }
+    public String titleDepositFinalSubtitle() { return config.getString("titleDeposit.final.subtitle"); }
+
+    public String titleWithdrawCountTitle() { return config.getString("titleWithdraw.count.title"); }
+    public String titleWithdrawCountSubtitle() { return config.getString("titleWithdraw.count.subtitle"); }
+    public String titleWithdrawFinalTitle() { return config.getString("titleWithdraw.final.title"); }
+    public String titleWithdrawFinalSubtitle() { return config.getString("titleWithdraw.final.subtitle"); }
+
 }

@@ -4,6 +4,7 @@ import io.lightstudio.economy.Light;
 import io.lightstudio.economy.eco.LightEco;
 import io.lightstudio.economy.eco.api.EcoProfile;
 import io.lightstudio.economy.eco.api.TransactionStatus;
+import io.lightstudio.economy.eco.api.animations.TitleCountUpAndDown;
 import io.lightstudio.economy.util.CurrencyChecker;
 import io.lightstudio.economy.util.NumberFormatter;
 import io.lightstudio.economy.util.SubCommand;
@@ -111,6 +112,16 @@ public class EcoRemoveCommand extends SubCommand {
                     .replace("#amount#", NumberFormatter.formatForMessages(bg))
                     .replace("#currency#", CurrencyChecker.getCurrency(bg))
                     .replace("#player#", target.getName()), player);
+
+            TitleCountUpAndDown titleCountUp = new TitleCountUpAndDown.Builder(target.getPlayer())
+                    .setAmountToCount(bg)
+                    .setFadeIn(0)
+                    .setStay(40)
+                    .setFadeOut(40)
+                    .setIsDeposit(false)
+                    .build();
+            titleCountUp.startCountUp();
+
             return false;
         }
 

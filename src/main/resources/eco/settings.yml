@@ -27,5 +27,33 @@ default-currency:
   # - max-pocket-balance: 1.7976931348623157E308
   # This is the maximum number you can use.
   max-pocket-balance: 100000000000000000000
+# Here you can change the settings for the Title Animation.
+# The Title Animation will be shown when a player receives or lose money.
+# The Animations will trigger by the following events:
+# — Player receives money. (e.g., any income or payment from third party plugins).
+# — Player loses money. (e.g., any expenses or payment to third party plugins).
+# — Any LightEconomy add or remove money commands.
+# The translation of the Title Animation is in the current used language file.
+title-animation:
+  # Enable or disable the Title Animation.
+  enable: true
+  # The Title Animation will only be shown if the target value is greater or equal than this value.
+  min: 15000
+  # The style of the Title Animation.
+  # style: LINEAR – The title will count linear from 0 to the target value.
+  # style: EXPONENTIAL – The title will count exponential from 0 to the target value. (not implemented yet)
+  style: LINEAR
+  # The duration of the Title Animation in seconds.
+  duration: 4
+  sound-settings:
+    # Enable or disable the sound of the Title Animation.
+    enable: true
+    # The sound of the Title Animation.
+    # The sound will only be played if the target value is greater or equal than this value.
+    sound: BLOCK_NOTE_BLOCK_PLING
+    # The volume of the sound.
+    volume: 1.0
+    # The sound channel where the sound will be played.
+    channel: GLOBAL
 main-settings:
   date-format: 'dd:MM:yyyy'

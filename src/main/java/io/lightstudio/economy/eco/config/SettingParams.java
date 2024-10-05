@@ -31,12 +31,43 @@ public class SettingParams {
     public SettingWrapper mainSettings() {
         return new SettingWrapper();
     }
+    public TitleWrapper titleSettings() { return new TitleWrapper(); }
 
 
     public class SettingWrapper {
         public SimpleDateFormat getDateFormat() {
             String result = lightEco.getSettings().getConfig().getString("module-language");
             return result != null ? new SimpleDateFormat(result) : new SimpleDateFormat("dd:MM:yyyy");
+        }
+    }
+
+    public class TitleWrapper {
+
+        public boolean titleEnabled() {
+            return lightEco.getSettings().getConfig().getBoolean("title-animation.enable");
+        }
+        public double titleMin() {
+            return lightEco.getSettings().getConfig().getDouble("title-animation.min");
+        }
+        public String titleStyle() {
+            return lightEco.getSettings().getConfig().getString("title-animation.style");
+        }
+        public int titleDuration() {
+            return lightEco.getSettings().getConfig().getInt("title-animation.duration");
+        }
+
+
+        public boolean soundEnabled() {
+            return lightEco.getSettings().getConfig().getBoolean("title-animation.sound-settings.enable");
+        }
+        public String soundType() {
+            return lightEco.getSettings().getConfig().getString("title-animation.sound-settings.sound");
+        }
+        public float soundVolume() {
+            return (float) lightEco.getSettings().getConfig().getDouble("title-animation.sound-settings.volume");
+        }
+        public String soundChannel() {
+            return lightEco.getSettings().getConfig().getString("title-animation.sound-settings.channel");
         }
     }
 

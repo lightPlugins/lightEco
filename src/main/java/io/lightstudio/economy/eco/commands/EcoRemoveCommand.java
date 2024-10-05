@@ -2,9 +2,7 @@ package io.lightstudio.economy.eco.commands;
 
 import io.lightstudio.economy.Light;
 import io.lightstudio.economy.eco.LightEco;
-import io.lightstudio.economy.eco.api.EcoProfile;
-import io.lightstudio.economy.eco.api.TransactionStatus;
-import io.lightstudio.economy.eco.api.animations.TitleCountUpAndDown;
+import io.lightstudio.economy.eco.api.animations.EconomyTitle;
 import io.lightstudio.economy.util.CurrencyChecker;
 import io.lightstudio.economy.util.NumberFormatter;
 import io.lightstudio.economy.util.SubCommand;
@@ -17,7 +15,6 @@ import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -113,14 +110,9 @@ public class EcoRemoveCommand extends SubCommand {
                     .replace("#currency#", CurrencyChecker.getCurrency(bg))
                     .replace("#player#", target.getName()), player);
 
-            TitleCountUpAndDown titleCountUp = new TitleCountUpAndDown.Builder(target.getPlayer())
-                    .setAmountToCount(bg)
-                    .setFadeIn(0)
-                    .setStay(40)
-                    .setFadeOut(40)
-                    .setIsDeposit(false)
-                    .build();
-            titleCountUp.startCountUp();
+            EconomyTitle titleCountUp = new EconomyTitle.Builder(target.getPlayer())
+                    .setAmountToCount(bg).setIsDeposit(false).build();
+            titleCountUp.startCount();
 
             return false;
         }

@@ -129,13 +129,15 @@ public class EcoSetCommand extends SubCommand {
         OfflinePlayer target = Bukkit.getPlayer(args[1]);
 
         if(target == null) {
-            sender.sendMessage(LightEco.getMessageParams().playerNotFound());
+            // sender.sendMessage(LightEco.getMessageParams().playerNotFound());
+            Light.getConsolePrinting().print("The player " + args[1] + " hasn't been found.");
             return false;
         }
 
         if(!NumberFormatter.isNumber(args[2])) {
             if(!NumberFormatter.isShortNumber(args[2])) {
-                sender.sendMessage(LightEco.getMessageParams().noNumber());
+                // sender.sendMessage(LightEco.getMessageParams().noNumber());
+                Light.getConsolePrinting().print("The number " + args[2] + " is not a number.");
                 return false;
             }
         }
@@ -143,12 +145,14 @@ public class EcoSetCommand extends SubCommand {
         BigDecimal bg = NumberFormatter.parseMoney(args[2]);
 
         if(bg == null) {
-            sender.sendMessage(LightEco.getMessageParams().noNumber());
+            // sender.sendMessage(LightEco.getMessageParams().noNumber());
+            Light.getConsolePrinting().print("The number " + args[2] + " is not a number.");
             return false;
         }
 
         if(!NumberFormatter.isPositiveNumber(bg.doubleValue())) {
-            sender.sendMessage(LightEco.getMessageParams().onlyPositive());
+            // sender.sendMessage(LightEco.getMessageParams().onlyPositive());
+            Light.getConsolePrinting().print("The number " + args[2] + " is not a positive number.");
             return false;
         }
 
@@ -160,36 +164,44 @@ public class EcoSetCommand extends SubCommand {
             BigDecimal difference = bg.subtract(currentBalance);
             EconomyResponse response = LightEco.instance.getVaultImplementer().depositPlayer(target, difference.doubleValue());
             if (response.transactionSuccess()) {
-                sender.sendMessage(LightEco.getMessageParams().setSuccess() // Ändern Sie depositSuccess() zu withdrawSuccess()
-                        .replace("#amount#", NumberFormatter.formatForMessages(bg))
-                        .replace("#currency#", CurrencyChecker.getCurrency(bg))
-                        .replace("#player#", target.getName()));
+                Light.getConsolePrinting().print("The player "
+                        + target.getName()
+                        + " has been added "
+                        + difference + " "
+                        + CurrencyChecker.getCurrency(difference)
+                        + " to his account.");
             } else {
-                sender.sendMessage(LightEco.getMessageParams().setFailed() // Ändern Sie depositFailed() zu withdrawFailed()
-                        .replace("#amount#", NumberFormatter.formatForMessages(bg))
-                        .replace("#currency#", CurrencyChecker.getCurrency(bg))
-                        .replace("#player#", target.getName())
-                        .replace("#reason#", response.errorMessage));
+                Light.getConsolePrinting().print("The player "
+                        + target.getName()
+                        + " hasn't been added "
+                        + difference + " "
+                        + CurrencyChecker.getCurrency(difference)
+                        + " to his account. "
+                        + "Reason: " + response.errorMessage);
             }
         } else if (currentBalance.compareTo(bg) > 0) {
             BigDecimal difference = currentBalance.subtract(bg);
             EconomyResponse response = LightEco.instance.getVaultImplementer().withdrawPlayer(target, difference.doubleValue());
             if (response.transactionSuccess()) {
-                sender.sendMessage(LightEco.getMessageParams().setSuccess() // Ändern Sie depositSuccess() zu withdrawSuccess()
-                        .replace("#amount#", NumberFormatter.formatForMessages(bg))
-                        .replace("#currency#", CurrencyChecker.getCurrency(bg))
-                        .replace("#player#", target.getName()));
+                Light.getConsolePrinting().print("The player "
+                        + target.getName()
+                        + " has been removed "
+                        + difference + " "
+                        + CurrencyChecker.getCurrency(difference)
+                        + " from his account.");
             } else {
-                sender.sendMessage(LightEco.getMessageParams().setFailed() // Ändern Sie depositFailed() zu withdrawFailed()
-                        .replace("#amount#", NumberFormatter.formatForMessages(bg))
-                        .replace("#currency#", CurrencyChecker.getCurrency(bg))
-                        .replace("#player#", target.getName())
-                        .replace("#reason#", response.errorMessage));
+                Light.getConsolePrinting().print("The player "
+                        + target.getName()
+                        + " hasn't been removed "
+                        + difference + " "
+                        + CurrencyChecker.getCurrency(difference)
+                        + " from his account. "
+                        + "Reason: " + response.errorMessage);
             }
         } else {
             // Maybe extra message for same balance and set amount.
             // Just a test message here.
-            sender.sendMessage("§cNothing has changed. Same current balance as the set amount");
+            Light.getConsolePrinting().print("Nothing has changed. Same current balance as the set amount");
         }
 
         return true;

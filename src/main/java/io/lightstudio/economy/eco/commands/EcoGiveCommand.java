@@ -191,13 +191,15 @@ public class EcoGiveCommand extends SubCommand {
         OfflinePlayer target = Bukkit.getPlayer(args[1]);
 
         if(target == null && !isGlobal) {
-            sender.sendMessage(LightEco.getMessageParams().playerNotFound());
+            // sender.sendMessage(LightEco.getMessageParams().playerNotFound());
+            Light.getConsolePrinting().error("Player not found: " + args[1]);
             return false;
         }
 
         if(!NumberFormatter.isNumber(args[2])) {
             if(!NumberFormatter.isShortNumber(args[2])) {
-                sender.sendMessage(LightEco.getMessageParams().noNumber());
+                // sender.sendMessage(LightEco.getMessageParams().noNumber());
+                Light.getConsolePrinting().error("Not a number: " + args[2]);
                 return false;
             }
         }
@@ -205,12 +207,14 @@ public class EcoGiveCommand extends SubCommand {
         BigDecimal bg = NumberFormatter.parseMoney(args[2]);
 
         if(bg == null) {
-            sender.sendMessage(LightEco.getMessageParams().noNumber());
+            // sender.sendMessage(LightEco.getMessageParams().noNumber());
+            Light.getConsolePrinting().error("Not a number: " + args[2]);
             return false;
         }
 
         if(!NumberFormatter.isPositiveNumber(bg.doubleValue())) {
-            sender.sendMessage(LightEco.getMessageParams().onlyPositive());
+            // sender.sendMessage(LightEco.getMessageParams().onlyPositive());
+            Light.getConsolePrinting().error("Only positive numbers allowed: " + bg);
             return false;
         }
 
@@ -269,19 +273,22 @@ public class EcoGiveCommand extends SubCommand {
         EconomyResponse response = LightEco.instance.getVaultImplementer().depositPlayer(target, bg.doubleValue());
 
         if(response.transactionSuccess()) {
-            sender.sendMessage(LightEco.getMessageParams().depositSuccess()
-                    .replace("#amount#", NumberFormatter.formatForMessages(bg))
-                    .replace("#currency#", CurrencyChecker.getCurrency(bg))
-                    .replace("#player#", target.getName()));
+            Light.getConsolePrinting().print("Successfully deposited "
+                    + NumberFormatter.formatForMessages(bg)
+                    + " "
+                    + CurrencyChecker.getCurrency(bg)
+                    + " to "
+                    + target.getName());
             return false;
         }
 
-        sender.sendMessage(LightEco.getMessageParams().depositFailed()
-                .replace("#amount#", NumberFormatter.formatForMessages(bg))
-                .replace("#currency#", CurrencyChecker.getCurrency(bg))
-                .replace("#player#", target.getName())
-                .replace("#reason#", response.errorMessage));
-
+        Light.getConsolePrinting().print("Failed deposited "
+                + NumberFormatter.formatForMessages(bg)
+                + " "
+                + CurrencyChecker.getCurrency(bg)
+                + " to "
+                + target.getName()
+                + " with reason: " + response.errorMessage);
         return true;
     }
 }

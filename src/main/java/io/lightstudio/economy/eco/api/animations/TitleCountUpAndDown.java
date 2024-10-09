@@ -67,7 +67,7 @@ public class TitleCountUpAndDown {
                     finalTitle = finalTitle.replace("#amount#", NumberFormatter.formatForMessages(current.amountToCount));
                     finalSubtitle = finalSubtitle.replace("#amount#", NumberFormatter.formatForMessages(current.amountToCount));
 
-                    TitleSender.sendTitle(player, finalTitle, finalSubtitle, 0, 40, 40);
+                    TitleSender.sendTitle(player, finalTitle, finalSubtitle, fadeIn, stay, fadeOut);
                     current.isCompleted = true;
                     this.cancel();
                     QueueManager.getQueue(player).poll();
@@ -88,7 +88,7 @@ public class TitleCountUpAndDown {
                 displayTitle = displayTitle.replace("#amount#", NumberFormatter.formatForMessages(current.currentAmount));
                 displaySubtitle = displaySubtitle.replace("#amount#", NumberFormatter.formatForMessages(current.currentAmount));
 
-                TitleSender.sendTitle(player, displayTitle, displaySubtitle, 0, 40, 40);
+                TitleSender.sendTitle(player, displayTitle, displaySubtitle, fadeIn, stay, fadeOut);
                 ticks++;
             }
         }.runTaskTimer(Light.instance, 0L, 1L);

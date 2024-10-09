@@ -50,7 +50,7 @@ public class EcoDeleteCommand extends SubCommand {
             }
 
             if(args.length == 1) {
-                return List.of("delete");
+                return getName();
             }
 
             if (args.length == 2) {

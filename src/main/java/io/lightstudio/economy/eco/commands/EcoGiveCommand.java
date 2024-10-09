@@ -266,9 +266,9 @@ public class EcoGiveCommand extends SubCommand {
             return true;
         }
 
-        EcoProfile ecoProfile = LightEco.getAPI().getEcoProfile(target.getUniqueId());
-        TransactionStatus status = ecoProfile.deposit(bg);
-        if(status.equals(TransactionStatus.SUCCESS)) {
+        EconomyResponse response = LightEco.instance.getVaultImplementer().depositPlayer(target, bg.doubleValue());
+
+        if(response.transactionSuccess()) {
             sender.sendMessage(LightEco.getMessageParams().depositSuccess()
                     .replace("#amount#", NumberFormatter.formatForMessages(bg))
                     .replace("#currency#", CurrencyChecker.getCurrency(bg))
@@ -280,7 +280,7 @@ public class EcoGiveCommand extends SubCommand {
                 .replace("#amount#", NumberFormatter.formatForMessages(bg))
                 .replace("#currency#", CurrencyChecker.getCurrency(bg))
                 .replace("#player#", target.getName())
-                .replace("#reason#", status.toString()));
+                .replace("#reason#", response.errorMessage));
 
         return true;
     }

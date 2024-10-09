@@ -129,7 +129,7 @@ public class EcoSetCommand extends SubCommand {
         OfflinePlayer target = Bukkit.getPlayer(args[1]);
 
         if(target == null) {
-            // sender.sendMessage(LightEco.getMessageParams().playerNotFound());
+            // sender.sendMessage(LightEco.getMessageParams().playerNotFound()); test
             Light.getConsolePrinting().print("The player " + args[1] + " hasn't been found.");
             return false;
         }

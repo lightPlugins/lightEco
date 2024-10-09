@@ -4,7 +4,7 @@ import io.lightstudio.economy.Light;
 import io.lightstudio.economy.eco.LightEco;
 import io.lightstudio.economy.eco.api.EcoProfile;
 import io.lightstudio.economy.eco.api.TransactionStatus;
-import io.lightstudio.economy.eco.api.animations.TitleCountUpAndDown;
+import io.lightstudio.economy.eco.api.animations.EconomyTitle;
 import io.lightstudio.economy.util.CurrencyChecker;
 import io.lightstudio.economy.util.NumberFormatter;
 import io.lightstudio.economy.util.SubCommand;
@@ -110,23 +110,36 @@ public class EcoGiveCommand extends SubCommand {
         if(isGlobal) {
             // filtering out the profiles that are not towny accounts
 
-            HashMap<EcoProfile, TransactionStatus> failedProfiles = new HashMap<>();
+            HashMap<EcoProfile, EconomyResponse> failedProfiles = new HashMap<>();
 
-            ecoProfiles.stream().filter(ecoProfile -> Towny.getTownyUUID(ecoProfile.getUuid().toString()) != null).forEach(ecoProfile -> {
+            List<EcoProfile> filteredEcoProfiles = new ArrayList<>();
+            for (EcoProfile ecoProfile : ecoProfiles) {
 
-                TransactionStatus status = LightEco.getAPI().getEcoProfile(ecoProfile.getUuid()).deposit(bg);
-                if(!status.equals(TransactionStatus.SUCCESS)) {
-                    failedProfiles.put(ecoProfile, status);
-                    Light.getConsolePrinting().error("Failed to deposit " + bg + " to " +
-                            ecoProfile.getPlayerName() + " with reason: " + status);
+                if (!Towny.isTownyUUID(ecoProfile.getUuid())) {
+                    Light.getConsolePrinting().debug("Player Account: " + ecoProfile.getUuid().toString());
+                    filteredEcoProfiles.add(ecoProfile);
+                    continue;
                 }
-            });
+
+                Light.getConsolePrinting().debug("Skipping towny, resident or npc: " + ecoProfile.getUuid().toString());
+            }
+
+            for (EcoProfile ecoProfile : filteredEcoProfiles) {
+                OfflinePlayer targetPlayer = Bukkit.getPlayer(ecoProfile.getUuid());
+                if(targetPlayer != null) {
+                    EconomyResponse response = LightEco.instance.getVaultImplementer().depositPlayer(targetPlayer, bg.doubleValue());
+                    if(!response.transactionSuccess()) {
+                        failedProfiles.put(ecoProfile, response);
+                    }
+                }
+            }
+
 
             if(!failedProfiles.isEmpty()) {
                 Light.getMessageSender().sendPlayerMessage(LightEco.getMessageParams().depositAllFailed()
                         .replace("#amount#", NumberFormatter.formatForMessages(bg))
                         .replace("#currency#", CurrencyChecker.getCurrency(bg))
-                        .replace("#count#", NumberFormatter.formatForMessages(bg)), player);
+                        .replace("#count#",  String.valueOf(failedProfiles.size())), player);
 
                 Light.getConsolePrinting().error(failedProfiles.size() + " of " +
                         ecoProfiles.size() + " accounts failed to deposit. See details below: ");
@@ -155,15 +168,9 @@ public class EcoGiveCommand extends SubCommand {
                     .replace("#currency#", CurrencyChecker.getCurrency(bg))
                     .replace("#player#", target.getName()), player);
 
-            TitleCountUpAndDown titleCountUp = new TitleCountUpAndDown.Builder(target.getPlayer())
-                    .setAmountToCount(bg)
-                    .setFadeIn(0)
-                    .setStay(40)
-                    .setFadeOut(40)
-                    .setIsDeposit(true)
-                    .build();
-            titleCountUp.startCountUp();
-
+            EconomyTitle economyTitle = new EconomyTitle.Builder(target.getPlayer())
+                    .setAmountToCount(bg).setIsDeposit(true).build();
+            economyTitle.startCount();
 
             return false;
         }
@@ -173,6 +180,7 @@ public class EcoGiveCommand extends SubCommand {
                 .replace("#currency#", CurrencyChecker.getCurrency(bg))
                 .replace("#player#", target.getName())
                 .replace("#reason#", response.errorMessage), player);
+
         return false;
     }
 

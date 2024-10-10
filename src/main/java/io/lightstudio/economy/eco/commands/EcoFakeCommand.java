@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-
+@Deprecated
 public class EcoFakeCommand extends SubCommand {
     @Override
     public List<String> getName() {

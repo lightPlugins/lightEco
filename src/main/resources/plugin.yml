@@ -16,6 +16,3 @@ commands:
   bal:
     description: The root command for LightEco overall
     aliases: [money, eco, economy, balance]
-  baltop:
-    description: The root command for LightEco overall
-    aliases: [moneytop, ecotop, economytop, balancetop]

@@ -136,7 +136,7 @@ public class LightEco implements LightModule {
         subCommands.add(new EcoGiveCommand());
         subCommands.add(new EcoSetCommand());
         subCommands.add(new EcoRemoveCommand());
-        subCommands.add(new EcoFakeCommand());
+        // subCommands.add(new EcoFakeCommand());
         subCommands.add(new EcoDeleteCommand());
         subCommands.add(new EcoReloadCommand());
         subCommands.add(new EcoTopCommand());

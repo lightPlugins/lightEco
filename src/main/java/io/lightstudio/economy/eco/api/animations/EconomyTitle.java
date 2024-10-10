@@ -142,7 +142,7 @@ public class EconomyTitle {
                             public void run() {
                                 processQueue();
                             }
-                        }.runTaskLater(Light.instance, 80L); // Delay the next queue processing by 40 ticks
+                        }.runTaskLater(Light.instance, 80L); // Delay the next queue processing by 40*2 ticks
                     }
                     return;
                 }

@@ -63,7 +63,7 @@ public class LightEco implements LightModule {
         Light.getConsolePrinting().print(
                 "Creating default files for core module " + this.moduleName);
         initFiles();
-        this.settingParams = new SettingParams(this);
+        settingParams = new SettingParams(this);
         Light.getConsolePrinting().print(
                 "Selecting module language for core module " + this.moduleName);
         selectLanguage();
@@ -105,9 +105,11 @@ public class LightEco implements LightModule {
         //initFiles();
         getSettings().reloadConfig(moduleName + "/settings.yml");
         Light.getConsolePrinting().print(moduleName + "/settings.yml");
+        settingParams = new SettingParams(this);
         selectLanguage();
         Light.getConsolePrinting().print(moduleName + "/language/" + settingParams.getModuleLanguage() + ".yml");
         getLanguage().reloadConfig(moduleName + "/language/" + settingParams.getModuleLanguage() + ".yml");
+        messageParams = new MessageParams(language);
     }
 
     @Override
@@ -137,6 +139,7 @@ public class LightEco implements LightModule {
         subCommands.add(new EcoFakeCommand());
         subCommands.add(new EcoDeleteCommand());
         subCommands.add(new EcoReloadCommand());
+        subCommands.add(new EcoTopCommand());
         new CommandManager(ecoCommand, subCommands);
 
     }

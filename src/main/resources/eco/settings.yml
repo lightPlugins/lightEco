@@ -55,5 +55,15 @@ title-animation:
     volume: 1.0
     # The sound channel where the sound will be played.
     channel: GLOBAL
+# Here you can change the settings for the Top List.
+# The translations are in the current used language file.
+# en.yml -> topCommand -> header 'Top 10 Players with the largest balance on the server'
+# en.yml -> topCommand -> entry 'Top 10 Players with the largest balance on the server'
+# en.yml -> topCommand -> footer 'Top 10 Players with the largest balance on the server'
+hologram-settings:
+  amount: 10
+# Here you can change all the main settings related to the eco module.
 main-settings:
+  # The amount of players shown in the Top List Command
+  baltop-amount: 10
   date-format: 'dd:MM:yyyy'

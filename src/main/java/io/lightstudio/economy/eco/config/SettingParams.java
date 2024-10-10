@@ -25,19 +25,23 @@ public class SettingParams {
     }
 
 
-    public DefaultCurrency defaultCurrency() {
-        return new DefaultCurrency();
+    public DefaultCurrencyWrapper defaultCurrency() {
+        return new DefaultCurrencyWrapper();
     }
-    public SettingWrapper mainSettings() {
-        return new SettingWrapper();
-    }
+    public SettingWrapper mainSettings() { return new SettingWrapper(); }
     public TitleWrapper titleSettings() { return new TitleWrapper(); }
 
 
     public class SettingWrapper {
+
         public SimpleDateFormat getDateFormat() {
-            String result = lightEco.getSettings().getConfig().getString("module-language");
-            return result != null ? new SimpleDateFormat(result) : new SimpleDateFormat("dd:MM:yyyy");
+            String dateFormat = lightEco.getSettings().getConfig().getString("main-settings.date-format");
+            if(dateFormat == null) { return new SimpleDateFormat("dd:MM:yyyy");}
+            return new SimpleDateFormat(dateFormat);
+        }
+        // the amount of entries shown in /eco top command.
+        public int getBalTopAmount() {
+            return lightEco.getSettings().getConfig().getInt("main-settings.baltop-amount");
         }
     }
 
@@ -72,7 +76,7 @@ public class SettingParams {
     }
 
 
-    public class DefaultCurrency {
+    public class DefaultCurrencyWrapper {
         public BigDecimal getStartBalance() {
             double startBalance = lightEco.getSettings().getConfig().getDouble(defaultCurrency + "start-balance");
             return NumberFormatter.formatBigDecimal(BigDecimal.valueOf(startBalance));

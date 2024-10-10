@@ -3,6 +3,8 @@ package io.lightstudio.economy.eco.config;
 import io.lightstudio.economy.util.manager.FileManager;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.util.List;
+
 public class MessageParams {
 
     private final FileConfiguration config;
@@ -12,7 +14,7 @@ public class MessageParams {
     }
 
     public int version() { return config.getInt("version"); }
-
+    // Basic translations
     public String prefix() { return config.getString("prefix"); }
     public String noPermission() { return config.getString("noPermission"); }
     public String moduleReload() { return config.getString("moduleReload"); }
@@ -30,15 +32,19 @@ public class MessageParams {
     public String withdrawFailed() { return config.getString("withdrawFailed"); }
     public String setSuccess() { return config.getString("setSuccess"); }
     public String setFailed() { return config.getString("setFailed"); }
-
+    //  Title Deposit messages
     public String titleDepositCountTitle() { return config.getString("titleDeposit.count.title"); }
     public String titleDepositCountSubtitle() { return config.getString("titleDeposit.count.subtitle"); }
     public String titleDepositFinalTitle() { return config.getString("titleDeposit.final.title"); }
     public String titleDepositFinalSubtitle() { return config.getString("titleDeposit.final.subtitle"); }
-
+    //  Title Withdraw messages
     public String titleWithdrawCountTitle() { return config.getString("titleWithdraw.count.title"); }
     public String titleWithdrawCountSubtitle() { return config.getString("titleWithdraw.count.subtitle"); }
     public String titleWithdrawFinalTitle() { return config.getString("titleWithdraw.final.title"); }
     public String titleWithdrawFinalSubtitle() { return config.getString("titleWithdraw.final.subtitle"); }
+    //  Top command messages
+    public List<String> topCommandHeader() { return config.getStringList("topCommand.header"); }
+    public String topCommandEntry() { return config.getString("topCommand.entry"); }
+    public List<String> topCommandFooter() { return config.getStringList("topCommand.footer"); }
 
 }

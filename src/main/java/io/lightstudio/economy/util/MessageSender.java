@@ -15,4 +15,12 @@ public class MessageSender {
             audience.sendMessage(component);
         });
     }
+
+    public void sendPlayerMessageWithoutPrefix(String message, Player player) {
+        Bukkit.getScheduler().runTask(Light.instance, () -> {
+            Audience audience = (Audience) player;
+            Component component = Light.instance.colorTranslation.universalColor(message);
+            audience.sendMessage(component);
+        });
+    }
 }

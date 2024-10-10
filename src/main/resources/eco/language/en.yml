@@ -11,8 +11,9 @@
 #          \$$$$$$  |                                                                                  \$$$$$$  |
 #           \______/                                                                                    \______/
 #
-# Do not change this value !
-version: 6
+# Do not change this values !
+version: 6.0
+moduleName: eco
 # Here you can translate ALL the plugin messages. Possible formats:
 #   - '<red>' -> red color
 #   - '<bold> [<b>]' -> bold
@@ -29,6 +30,7 @@ version: 6
 #   - prefix: '<#ffdc73><bold><italic>light<reset><gray>Economy<reset> <dark_gray>●⏺<reset> <gray>'
 #   - prefix: '&#ffdc73&l&olight&7Economy &8●⏺ &7'
 #
+#   Basic translations:
 prefix: '<#ffdc73><b><i>light<reset><gray>Economy<reset> <dark_gray>●⏺<reset> <gray>'
 noPermission: '<red>You do not have permission to use this command! You need <dark_red>#permission#'
 moduleReload: '<gray>Module <#ffdc73>#module#<gray> successfully reloaded!'
@@ -61,3 +63,16 @@ titleWithdraw:
   final:
     title: '<red>- <gray>#amount# #currency#'
     subtitle: '<gray>You made a withdrawal'
+#   Top Command
+topCommand:
+  header:
+    - '  <gray><strikethrough>-----<reset><#ffdc73>●<gray><strikethrough>-----<reset> <#ffdc73><bold><italic>light<gray>Economy <gray><strikethrough>-----<reset><#ffdc73>●<gray><strikethrough>-----<reset>'
+    - '   <gray>Top <#ffdc73>10 <gray>Players with the largest'
+    - '       <gray>balance on the server'
+    - ' '
+    - '  <dark_gray>● <#ffdc73><bold>Overall <gray>- <#ffdc73>#overall# <gray>#currency#'
+    - ' '
+  entry: '  <dark_gray>● <#ffdc73><bold>#position#<reset><gray># <dark_gray>● <#ffdc73>#name# <gray>- <#ffdc73>#amount# <gray>#currency#'
+  footer:
+    - ' '
+    - '  <gray><strikethrough>-----<reset><#ffdc73>●<gray><strikethrough>-----<reset> <gray><strikethrough>-----<reset><#ffdc73>●<gray>⏺<#ffdc73>●<gray><strikethrough>-----<reset> <gray><strikethrough>-----<reset><#ffdc73>●<gray><strikethrough>-----<reset>'

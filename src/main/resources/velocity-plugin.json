@@ -1,0 +1,13 @@
+{
+  "id": "lightEconomy",
+  "name": "lightEconomy",
+  "version": "0.1.0",
+  "authors": ["lightStudio"],
+  "main": "io.lightstudio.economy.LightProxy",
+  "dependencies": [
+    {
+      "id": "velocity",
+      "optional": false
+    }
+  ]
+}

@@ -26,6 +26,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+import static io.lightstudio.economy.LightProxy.IDENTIFIER;
+
 public class Light extends JavaPlugin {
 
 
@@ -72,6 +74,10 @@ public class Light extends JavaPlugin {
 
         consolePrinting.print("Loading lightEco modules...");
         messageSender = new MessageSender();
+        this.getServer().getMessenger().registerOutgoingPluginChannel(
+                this, "BungeeCord");
+        this.getServer().getMessenger().registerOutgoingPluginChannel(
+                this, IDENTIFIER.getId());
         initModules();
         loadModules();
         registerPlaceHolders();

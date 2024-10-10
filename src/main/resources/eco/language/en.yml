@@ -51,18 +51,18 @@ setFailed: '<red>Failed to set <dark_red>#amount# <red>#currency# for <dark_red>
 #   Title Animations
 titleDeposit:
   count:
-    title: '<gray>Deposit <red>cto <gray>wallet'
-    subtitle: '<green>+ <gray>#amount# #currency#'
+    title: '<white>Deposit <#ffdc73>to <white>wallet'
+    subtitle: '<green>+ <#ffdc73>#amount# <white>#currency#'
   final:
-    title: '<green>+ <gray>#amount# #currency#'
-    subtitle: '<gray>You received a deposit'
+    title: '<green>+ <#ffdc73>#amount# <white>#currency#'
+    subtitle: '<white>You received a deposit'
 titleWithdraw:
   count:
-    title: '<gray>Withdraw <red>from <gray>wallet'
-    subtitle: '<red>- <gray>#amount# #currency#'
+    title: '<white>Withdraw <#ffdc73>from <gray>wallet'
+    subtitle: '<red>- <#ffdc73>#amount# <white>#currency#'
   final:
-    title: '<red>- <gray>#amount# #currency#'
-    subtitle: '<gray>You made a withdrawal'
+    title: '<red>- <#ffdc73>#amount# <white>#currency#'
+    subtitle: '<white>You made a withdrawal'
 #   Top Command
 topCommand:
   header:

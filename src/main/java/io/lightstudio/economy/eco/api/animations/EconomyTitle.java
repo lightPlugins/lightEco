@@ -2,6 +2,7 @@ package io.lightstudio.economy.eco.api.animations;
 
 import io.lightstudio.economy.Light;
 import io.lightstudio.economy.eco.LightEco;
+import io.lightstudio.economy.util.CurrencyChecker;
 import io.lightstudio.economy.util.NumberFormatter;
 import io.lightstudio.economy.util.TitleSender;
 import lombok.Getter;
@@ -84,20 +85,24 @@ public class EconomyTitle {
     public void processQueue() {
 
         if (!titleEnable) {
+            Light.getConsolePrinting().debug("Title is disabled, skipping queue processing.");
             return;
         }
 
         if (amountToCount.doubleValue() < titleMinAmount) {
+            Light.getConsolePrinting().debug("Amount to count is less than the minimum amount, skipping queue processing.");
             return;
         }
 
         if (player == null || !player.isOnline()) {
+            Light.getConsolePrinting().debug("Player is offline, removing from queue.");
             QueueManager.removeQueue(player);
             return;
         }
 
         EconomyTitle current = QueueManager.getQueue(player).peek();
         if (current == null || current.isCompleted) {
+            Light.getConsolePrinting().debug("Current title is null or already completed, removing from queue.");
             return;
         }
 
@@ -112,11 +117,19 @@ public class EconomyTitle {
                     current.currentAmount = current.amountToCount; // Ensure currentAmount is exactly amountToCount
                     String finalTitle = current.isDeposit ? titleDepositFinalTitle : titleWithdrawFinalTitle;
                     String finalSubtitle = current.isDeposit ?
-                            titleDepositFinalSubtitle.replace("#amount#", NumberFormatter.formatForMessages(current.amountToCount)) :
-                            titleWithdrawFinalSubtitle.replace("#amount#", NumberFormatter.formatForMessages(current.amountToCount.negate()));
+                            titleDepositFinalSubtitle
+                                    .replace("#amount#", NumberFormatter.formatForMessages(current.amountToCount))
+                                    .replace("#currency#", CurrencyChecker.getCurrency(current.amountToCount)) :
+                            titleWithdrawFinalSubtitle
+                                    .replace("#amount#", NumberFormatter.formatForMessages(current.amountToCount.negate()))
+                                    .replace("#currency#", CurrencyChecker.getCurrency(current.amountToCount));
 
-                    finalTitle = finalTitle.replace("#amount#", NumberFormatter.formatForMessages(current.amountToCount));
-                    finalSubtitle = finalSubtitle.replace("#amount#", NumberFormatter.formatForMessages(current.amountToCount));
+                    finalTitle = finalTitle
+                            .replace("#amount#", NumberFormatter.formatForMessages(current.amountToCount))
+                            .replace("#currency#", CurrencyChecker.getCurrency(current.amountToCount));
+                    finalSubtitle = finalSubtitle
+                            .replace("#amount#", NumberFormatter.formatForMessages(current.amountToCount))
+                            .replace("#currency#", CurrencyChecker.getCurrency(current.amountToCount));
 
                     TitleSender.sendTitle(player, finalTitle, finalSubtitle, 0, 40, 40);
 
@@ -142,8 +155,12 @@ public class EconomyTitle {
                 String displayTitle = current.isDeposit ? titleDepositCountTitle : titleWithdrawCountTitle;
                 String displaySubtitle = current.isDeposit ? titleDepositCountSubtitle : titleWithdrawCountSubtitle;
 
-                displayTitle = displayTitle.replace("#amount#", NumberFormatter.formatForMessages(current.currentAmount));
-                displaySubtitle = displaySubtitle.replace("#amount#", NumberFormatter.formatForMessages(current.currentAmount));
+                displayTitle = displayTitle
+                        .replace("#amount#", NumberFormatter.formatForMessages(current.currentAmount))
+                        .replace("#currency#", CurrencyChecker.getCurrency(current.currentAmount));
+                displaySubtitle = displaySubtitle
+                        .replace("#amount#", NumberFormatter.formatForMessages(current.currentAmount))
+                        .replace("#currency#", CurrencyChecker.getCurrency(current.currentAmount));
 
                 TitleSender.sendTitle(player, displayTitle, displaySubtitle, 0, 40, 40);
 

@@ -11,7 +11,7 @@ public class MessageSender {
     public void sendPlayerMessage(String message, Player player) {
         Bukkit.getScheduler().runTask(Light.instance, () -> {
             Audience audience = (Audience) player;
-            Component component = Light.instance.colorTranslation.universalColor(LightEco.getMessageParams().prefix() + message);
+            Component component = Light.instance.colorTranslation.universalColor(player, LightEco.getMessageParams().prefix() + message);
             audience.sendMessage(component);
         });
     }
@@ -19,7 +19,7 @@ public class MessageSender {
     public void sendPlayerMessageWithoutPrefix(String message, Player player) {
         Bukkit.getScheduler().runTask(Light.instance, () -> {
             Audience audience = (Audience) player;
-            Component component = Light.instance.colorTranslation.universalColor(message);
+            Component component = Light.instance.colorTranslation.universalColor(player, message);
             audience.sendMessage(component);
         });
     }

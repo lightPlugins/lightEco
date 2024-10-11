@@ -25,7 +25,7 @@ public class SendProxyMessage {
         // Write the channel type and message to the data output stream
         out.writeUTF(SubChannelPath.SEND_MESSAGE.getId());
         out.writeUTF(targetName);
-        out.writeUTF(MiniMessage.miniMessage().serialize(Light.instance.colorTranslation.universalColor(message)));
+        out.writeUTF(MiniMessage.miniMessage().serialize(Light.instance.colorTranslation.universalColor(sender, message)));
 
         // Send the plugin message through the BungeeCord channel
         Light.getConsolePrinting().debug("Sending message through proxy.");

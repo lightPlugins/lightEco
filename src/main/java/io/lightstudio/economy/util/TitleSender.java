@@ -11,8 +11,8 @@ public class TitleSender {
     public static void sendTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
 
         // Translate MiniMessage color codes
-        Component titleComponent = Light.instance.colorTranslation.universalColor(title);
-        Component subtitleComponent = Light.instance.colorTranslation.universalColor(subtitle);
+        Component titleComponent = Light.instance.colorTranslation.universalColor(player, title);
+        Component subtitleComponent = Light.instance.colorTranslation.universalColor(player, subtitle);
 
         // Create the title
         Title.Times times = Title.Times.times(java.time.Duration.ofMillis(fadeIn * 50L),

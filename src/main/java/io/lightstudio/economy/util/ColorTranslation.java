@@ -47,9 +47,10 @@ public class ColorTranslation {
             }
         }
         // Use PlaceholderAPI to translate placeholders in the message
-        PlaceholderAPI.setPlaceholders(player, msg);
+        msg = PlaceholderAPI.setPlaceholders(player, msg);
 
         // Translate '&' color codes to ChatColor
+        // Drop support for legacy color codes !
         // String legacyColor = ChatColor.translateAlternateColorCodes('&', msg);
 
         // Use MiniMessage to deserialize the legacy color codes

@@ -2,6 +2,7 @@ package io.lightstudio.economy;
 
 import com.zaxxer.hikari.HikariDataSource;
 import io.lightstudio.economy.eco.LightEco;
+import io.lightstudio.economy.messaging.backend.receive.ReceiveProxyMessage;
 import io.lightstudio.economy.util.ColorTranslation;
 import io.lightstudio.economy.util.ConsolePrinting;
 import io.lightstudio.economy.util.MessageSender;
@@ -16,6 +17,7 @@ import io.lightstudio.economy.util.interfaces.LightModule;
 import io.lightstudio.economy.util.manager.FileManager;
 import io.lightstudio.economy.util.manager.MultiFileManager;
 import io.lightstudio.economy.util.manager.PlaceholderManager;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -37,6 +39,10 @@ public class Light extends JavaPlugin {
 
     private Map<String, LightModule> modules = new HashMap<>();
     private final ArrayList<SubPlaceholder> subPlaceholders = new ArrayList<>();
+
+    // IDENTIFIER.getId() is not available in this context
+    @Getter
+    private final String minecraftChannelIdentifier = "lightstudio:lighteconomy";
 
     private static MessageSender messageSender;
     public static FileManager database;
@@ -74,10 +80,9 @@ public class Light extends JavaPlugin {
 
         consolePrinting.print("Loading lightEco modules...");
         messageSender = new MessageSender();
-        this.getServer().getMessenger().registerOutgoingPluginChannel(
-                this, "BungeeCord");
-        this.getServer().getMessenger().registerOutgoingPluginChannel(
-                this, IDENTIFIER.getId());
+        this.getServer().getMessenger().registerOutgoingPluginChannel(this, minecraftChannelIdentifier);
+        this.getServer().getMessenger().registerIncomingPluginChannel(
+                this, minecraftChannelIdentifier, new ReceiveProxyMessage());
         initModules();
         loadModules();
         registerPlaceHolders();

@@ -5,6 +5,7 @@ import io.lightstudio.economy.eco.LightEco;
 import io.lightstudio.economy.eco.api.EcoProfile;
 import io.lightstudio.economy.eco.api.TransactionStatus;
 import io.lightstudio.economy.eco.api.animations.EconomyTitle;
+import io.lightstudio.economy.messaging.backend.send.SendProxyMessage;
 import io.lightstudio.economy.util.CurrencyChecker;
 import io.lightstudio.economy.util.NumberFormatter;
 import io.lightstudio.economy.util.SubCommand;
@@ -167,6 +168,9 @@ public class EcoGiveCommand extends SubCommand {
                     .replace("#amount#", NumberFormatter.formatForMessages(bg))
                     .replace("#currency#", CurrencyChecker.getCurrency(bg))
                     .replace("#player#", target.getName()), player);
+
+            // Send a proxy message to the target player
+            SendProxyMessage.sendMessageThrowProxy(player, player.getName(), "<rainbow>That's a Proxy message test with placeholder: %vault_eco_balance%");
 
             EconomyTitle economyTitle = new EconomyTitle.Builder(target.getPlayer())
                     .setAmountToCount(bg).setIsDeposit(true).build();

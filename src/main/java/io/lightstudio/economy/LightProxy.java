@@ -7,35 +7,43 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.serializer.ansi.ANSIComponentSerializer;
+import io.lightstudio.economy.messaging.proxy.receive.ReceiveBackendMessage;
+import io.lightstudio.economy.messaging.util.ProxyConsolePrinter;
+import lombok.Getter;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import java.nio.file.Path;
 
-@Plugin(id = "lighteconomy", name = "LightEconomy", version = "0.1.0", authors = {"LightStudio"})
+@Plugin(id = "lighteconomy", name = "LightEconomy", version = "0.1.0", authors = {"LightStudios"})
 public class LightProxy {
 
     public static final MinecraftChannelIdentifier IDENTIFIER =
             MinecraftChannelIdentifier.from("lightstudio:lighteconomy");
 
-    private final ProxyServer server;
+    @Getter
+    private final ProxyServer proxy;
     private final Path dataDirectory;
     private final Logger logger;
+    @Getter
+    private static LightProxy instance;
+    @Getter
+    private final ProxyConsolePrinter consolePrinter;
 
     @Inject
-    public LightProxy(ProxyServer server, @DataDirectory Path dataDirectory, Logger logger) {
-        this.server = server;
+    public LightProxy(ProxyServer proxy, @DataDirectory Path dataDirectory, Logger logger) {
+        this.proxy = proxy;
         this.dataDirectory = dataDirectory;
         this.logger = logger;
+        instance = this;
+        this.consolePrinter = new ProxyConsolePrinter();
     }
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
-        sendConsole("<white>Hello, <#ffdc73>Velocity!");
-        // Initialization code for Velocity
+        consolePrinter.sendInfo("Registering LightEconomy plugin on Velocity...");
+        // Register the plugin channel with the provided identifier
+        registerChannelRegistrars();
     }
 
     @Subscribe
@@ -44,12 +52,10 @@ public class LightProxy {
         // Cleanup code for Velocity
     }
 
-
-    public void sendConsole(String message) {
-        String prefix = "[light<#ffdc73>Eco<reset>] ";
-        Component formattedMessage = MiniMessage.miniMessage().deserialize(prefix + message);
-        String ansiMessage = ANSIComponentSerializer.ansi().serialize(formattedMessage);
-        System.out.println(ansiMessage);
+    public void registerChannelRegistrars() {
+        proxy.getChannelRegistrar().register(IDENTIFIER);
+        proxy.getEventManager().register(this, new ReceiveBackendMessage());
+        consolePrinter.sendInfo("Successfully registered custom plugin channel for LightEconomy.");
     }
 
 }

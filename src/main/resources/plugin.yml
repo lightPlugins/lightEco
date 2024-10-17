@@ -16,3 +16,6 @@ commands:
   bal:
     description: The root command for LightEco overall
     aliases: [money, eco, economy, balance]
+  pay:
+    description: send money to another player
+    aliases: [payment]

@@ -26,10 +26,10 @@ public class CommandManager implements CommandExecutor {
     private void registerCommand(PluginCommand command) {
         if (command != null) {
             command.setExecutor(this);
-            Map<String, TabCompleter> subCommandTabCompleters = new HashMap<>();
+            Map<String, TabCompleter> subCommandTabCompleter = new HashMap<>();
             List<String> ecoSubCommands = new ArrayList<>(); // Liste der Subcommands von /eco
 
-            Light.getConsolePrinting().print(
+            Light.getConsolePrinting().debug(
                     "Successfully registered command " + command.getName());
 
             for (SubCommand subCommand : getSubCommands()) {
@@ -37,16 +37,16 @@ public class CommandManager implements CommandExecutor {
                 if (tabCompleter != null) {
                     List<String> subCommandNames = subCommand.getName();
                     for (String subCommandName : subCommandNames) {
-                        subCommandTabCompleters.put(subCommandName, tabCompleter);
+                        subCommandTabCompleter.put(subCommandName, tabCompleter);
                         ecoSubCommands.add(subCommandName); // Füge den Subcommand-Namen zur Liste hinzu
-                        Light.getConsolePrinting().print(
+                        Light.getConsolePrinting().debug(
                                 "Successfully registered tab completer for " + subCommandName);
                     }
                 }
             }
 
-            if (!subCommandTabCompleters.isEmpty()) {
-                command.setTabCompleter(new CompositeTabCompleter(subCommandTabCompleters, ecoSubCommands));
+            if (!subCommandTabCompleter.isEmpty()) {
+                command.setTabCompleter(new CompositeTabCompleter(subCommandTabCompleter, ecoSubCommands));
             }
         }
     }

@@ -1,3 +1,17 @@
+# Synchronizations for cross server setups.
+# If you have more than one server connected to the same Proxy, you must enable this feature.
+synchronization:
+  # Enable or disable the synchronization feature for cross server setups.
+  # If you are using a single server setup, you must disable this feature.
+  enable-cross-server: false
+  # Current available modes: PROXY, REDIS(not implemented yet)
+  sync-mode: PROXY
+  # The servers listed below will be synchronized with the master server.
+  # These servers share the same balance and player data including bank and virtual currencies.
+  syncing-server-list:
+    - 'cirybuild'
+    - 'skyblock'
+    - 'survival'
 storage:
   # if disabled, the plugin will automatically use sqlite for single server setup.
   type: sqlite

@@ -4,6 +4,7 @@ public enum SubChannelPath {
 
     PAY("lighteconomy:pay"),
     SEND_MESSAGE("lighteconomy:message"),
+    UPDATE_BALANCE("lighteconomy:updatebalance"),
     ;
 
     private String type;

@@ -7,6 +7,7 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
+import io.lightstudio.economy.messaging.proxy.receive.ReceiveBackendBalanceUpdate;
 import io.lightstudio.economy.messaging.proxy.receive.ReceiveBackendMessage;
 import io.lightstudio.economy.messaging.util.ProxyConsolePrinter;
 import lombok.Getter;
@@ -48,14 +49,19 @@ public class LightProxy {
 
     @Subscribe
     public void onProxyShutdown(ProxyShutdownEvent event) {
-        logger.info("LightEco plugin has been disabled on Velocity!");
+        consolePrinter.sendInfo("LightEco plugin has been disabled on Velocity!");
         // Cleanup code for Velocity
     }
 
     public void registerChannelRegistrars() {
+        // Register the plugin channel with the provided identifier
         proxy.getChannelRegistrar().register(IDENTIFIER);
+
+        // Register the plugin message listeners
         proxy.getEventManager().register(this, new ReceiveBackendMessage());
-        consolePrinter.sendInfo("Successfully registered custom plugin channel for LightEconomy.");
+        proxy.getEventManager().register(this, new ReceiveBackendBalanceUpdate());
+
+        consolePrinter.sendInfo("Successfully registered custom plugin channels for LightEconomy.");
     }
 
 }

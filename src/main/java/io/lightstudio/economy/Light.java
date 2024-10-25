@@ -2,6 +2,7 @@ package io.lightstudio.economy;
 
 import com.zaxxer.hikari.HikariDataSource;
 import io.lightstudio.economy.eco.LightEco;
+import io.lightstudio.economy.messaging.backend.receive.ReceiveBalanceUpdate;
 import io.lightstudio.economy.messaging.backend.receive.ReceiveProxyMessage;
 import io.lightstudio.economy.util.ColorTranslation;
 import io.lightstudio.economy.util.ConsolePrinting;
@@ -12,7 +13,6 @@ import io.lightstudio.economy.util.database.impl.MySQLDatabase;
 import io.lightstudio.economy.util.database.impl.SQLiteDatabase;
 import io.lightstudio.economy.util.database.model.ConnectionProperties;
 import io.lightstudio.economy.util.database.model.DatabaseCredentials;
-import io.lightstudio.economy.util.hooks.Towny;
 import io.lightstudio.economy.util.interfaces.LightModule;
 import io.lightstudio.economy.util.manager.FileManager;
 import io.lightstudio.economy.util.manager.MultiFileManager;
@@ -81,8 +81,12 @@ public class Light extends JavaPlugin {
         consolePrinting.print("Loading lightEco modules...");
         messageSender = new MessageSender();
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, minecraftChannelIdentifier);
+        // Receive messages from the proxy
         this.getServer().getMessenger().registerIncomingPluginChannel(
                 this, minecraftChannelIdentifier, new ReceiveProxyMessage());
+        // Receive balance updates from the proxy
+        this.getServer().getMessenger().registerIncomingPluginChannel(
+                this, minecraftChannelIdentifier, new ReceiveBalanceUpdate());
         initModules();
         loadModules();
         registerPlaceHolders();

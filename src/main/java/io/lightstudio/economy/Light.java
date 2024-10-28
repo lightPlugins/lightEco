@@ -80,7 +80,8 @@ public class Light extends JavaPlugin {
 
         consolePrinting.print("Loading lightEco modules...");
         messageSender = new MessageSender();
-        this.getServer().getMessenger().registerOutgoingPluginChannel(this, minecraftChannelIdentifier);
+        this.getServer().getMessenger().registerOutgoingPluginChannel(
+                this, minecraftChannelIdentifier);
         // Receive messages from the proxy
         this.getServer().getMessenger().registerIncomingPluginChannel(
                 this, minecraftChannelIdentifier, new ReceiveProxyMessage());
